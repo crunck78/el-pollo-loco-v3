@@ -1,323 +1,21 @@
-let GRAVITY = 9.81;
-let RIGHT = 1;
-let LEFT = 0;
-let STAY = -1;
-let MOVEMENT_SPEED = 15.75 * 0.2;
+import {World} from '../models/world.js'
+import {RIGHT, LEFT} from '../models/constants.js'
+function init() {
+  let chickensSmallXpos = [500, 700, 1200];
+  let chickensBigXpos = [900, 1200, 2000];
+  let bossesXpos = [2000, 5000];
+  let coinsXpos = [500, 700, 1200, 900, 1200, 2000, 2300, , 3000, 5000];
+  let bottlesXpos = [550, 750, 1250, 950, 1250, 2050, 2350, , 3100, 5300];
+  let level = new World(10, chickensSmallXpos, chickensBigXpos, bossesXpos, coinsXpos, bottlesXpos);
 
-pepeAnimations = {
-  walks: [
-    ["img/character/walk/left/W-21.png", "img/character/walk/left/W-22.png", "img/character/walk/left/W-23.png", "img/character/walk/left/W-24.png", "img/character/walk/left/W-25.png", "img/character/walk/left/W-26.png"],
-    ["img/character/walk/right/W-21.png", "img/character/walk/right/W-22.png", "img/character/walk/right/W-23.png", "img/character/walk/right/W-24.png", "img/character/walk/right/W-25.png", "img/character/walk/right/W-26.png"]
-  ],
-  jumps: [
-    ["img/character/jump/left/J-33.png", "img/character/jump/left/J-34.png", "img/character/jump/left/J-35.png"],
-    ["img/character/jump/right/J-33.png", "img/character/jump/right/J-34.png", "img/character/jump/right/J-35.png"]
-  ],
-  lands: [
-    ["img/character/jump/left/J-36.png", "img/character/jump/left/J-37.png", "img/character/jump/left/J-38.png"],
-    ["img/character/jump/right/J-36.png", "img/character/jump/right/J-37.png", "img/character/jump/right/J-38.png"]
-  ],
-  hits: [
-    ["img/character/hit/left/H-41.png", "img/character/hit/left/H-42.png", "img/character/hit/left/H-43.png"],
-    ["img/character/hit/right/H-41.png", "img/character/hit/right/H-42.png", "img/character/hit/right/H-43.png"]
-  ],
-  idles: [
-    ["img/character/idle/left/I-1.png", "img/character/idle/left/I-2.png", "img/character/idle/left/I-3.png", "img/character/idle/left/I-4.png", "img/character/idle/left/I-5.png", "img/character/idle/left/I-6.png", "img/character/idle/left/I-7.png", "img/character/idle/left/I-8.png", "img/character/idle/left/I-9.png", "img/character/idle/left/I-10.png"],
-    ["img/character/idle/right/I-1.png", "img/character/idle/right/I-2.png", "img/character/idle/right/I-3.png", "img/character/idle/right/I-4.png", "img/character/idle/right/I-5.png", "img/character/idle/right/I-6.png", "img/character/idle/right/I-7.png", "img/character/idle/right/I-8.png", "img/character/idle/right/I-9.png", "img/character/idle/right/I-10.png"]
-  ],
-  long_idles: [
-    ["img/character/idle/left/I-11.png", "img/character/idle/left/I-12.png", "img/character/idle/left/I-13.png", "img/character/idle/left/I-14.png", "img/character/idle/left/I-15.png", "img/character/idle/left/I-16.png", "img/character/idle/left/I-17.png", "img/character/idle/left/I-18.png", "img/character/idle/left/I-19.png", "img/character/idle/left/I-20.png"],
-    ["img/character/idle/right/I-11.png", "img/character/idle/right/I-12.png", "img/character/idle/right/I-13.png", "img/character/idle/right/I-14.png", "img/character/idle/right/I-15.png", "img/character/idle/right/I-16.png", "img/character/idle/right/I-17.png", "img/character/idle/right/I-18.png", "img/character/idle/right/I-19.png", "img/character/idle/right/I-20.png"]
-  ],
-  deads: [
-    ["img/character/dead/left/D-51.png", "img/character/dead/left/D-52.png", "img/character/dead/left/D-53.png", "img/character/dead/left/D-54.png", "img/character/dead/left/D-55.png", "img/character/dead/left/D-56.png"],
-    ["img/character/dead/right/D-51.png", "img/character/dead/right/D-52.png", "img/character/dead/right/D-53.png", "img/character/dead/right/D-54.png", "img/character/dead/right/D-55.png", "img/character/dead/right/D-56.png"]
-  ]
-};
+  level.pepe.checkForJump();
+  level.pepe.setStatus();
+  level.updateWorld();
+  level.draw();
 
-
-chickenSmallAnimations = {
-  walks: ["img/enemies/chicken-small/chicken-small_1.png", "img/enemies/chicken-small/chicken-small_2.png", "img/enemies/chicken-small/chicken-small_3.png"],
-  deads: "img/enemies/chicken-small/chicken-small_4.png"
-};
-
-chickenBigAnimations = {
-  walks: ["img/enemies/chicken-little/chicken-little_1.png", "img/enemies/chicken-little/chicken-little_2.png", "img/enemies/chicken-little/chicken-little_3.png"],
-  deads: "img/enemies/chicken-little/chicken-little_4.png"
-};
-
-bossAnimations = {
-  walks: ["img/enemies/chicken-big/walk/walk_1.png", "img/enemies/chicken-big/walk/walk_2.png", "img/enemies/chicken-big/walk/walk_3.png", "img/enemies/chicken-big/walk/walk_4.png"],
-  deads: ["img/enemies/chicken-big/dead/dead_1.png", "img/enemies/chicken-big/dead/dead_2.png", "img/enemies/chicken-big/dead/dead_3.png"],
-  alerts: ["img/enemies/chicken-big/alert/alert_1.png", , "img/enemies/chicken-big/alert/alert_2.png", "img/enemies/chicken-big/alert/alert_3.png", "img/enemies/chicken-big/alert/alert_4.png", "img/enemies/chicken-big/alert/alert_5.png", "img/enemies/chicken-big/alert/alert_6.png", "img/enemies/chicken-big/alert/alert_7.png", "img/enemies/chicken-big/alert/alert_8.png"],
-  attacks: ["img/enemies/chicken-big/attack/attack_1.png", "img/enemies/chicken-big/attack/attack_2.png", "img/enemies/chicken-big/attack/attack_3.png", "img/enemies/chicken-big/attack/attack_4.png", "img/enemies/chicken-big/attack/attack_5.png", "img/enemies/chicken-big/attack/attack_6.png", "img/enemies/chicken-big/attack/attack_7.png", "img/enemies/chicken-big/attack/attack_8.png"],
-  hits: ["img/enemies/chicken-big/hit/hit_1.png", "img/enemies/chicken-big/hit/hit_2.png", "img/enemies/chicken-big/hit/hit_3.png"]
-};
-
-let World = function (size, chickensSmall, chickensBig, bosses) { // size should be a pair number size % 2 == 0 
-  this.width = canvas.width * 2 * size;
-  this.height = canvas.height;
-  this.xPos = 0; //worlds possition in relate to Character
-  this.enemies = [];
-  this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeAnimations, 'idles', 15.75 * 0.2);
-  this.scenes = [];
-  this.sky = new Background(this.xPos, "img/sky.png", 1);// static, never moves
-
-  for (let i = 0; i < chickensSmall.length; i++) {
-    this.addChickenSmall(chickensSmall[i]);
-  }
-
-  for (let i = 0; i < chickensBig.length; i++) {
-    this.addChickenBig(chickensBig[i]);
-  }
-
-  for (let i = 0; i < bosses.length; i++) {
-    this.addBoss(bosses[i]);
-  }
-
-  for (let i = 0; i < size; i++) {
-    this.addScene(i * 2 * canvas.width); // 1 x scene.width equals 2 x canvas.width
-  }
-};
-
-World.prototype.addChickenSmall = function (xPos) {
-  this.enemies.push(new Enemy(xPos, 370, 0.2, chickenSmallAnimations, 'walks', Math.random() * (7.875 * 0.2)));
-};
-
-World.prototype.addChickenBig = function (xPos) {
-  this.enemies.push(new Enemy(xPos, 365, 0.2, chickenBigAnimations, 'walks', Math.random() * (7.875 * 0.2)));
-};
-
-World.prototype.addBoss = function (xPos) {
-  this.enemies.push(new Boss(xPos, 200, 0.2, bossAnimations, 'walks', Math.random() * (7.875 * 0.2)));
-};
-
-World.prototype.addScene = function (xPos) {
-  this.scenes.push(new Scene(xPos));
-};
-
-World.prototype.updateWorld = function () {
-  if (this.pepe.isMovingRight && this.xPos > -(this.width - canvas.width)) {
-    this.xPos -= this.pepe.speed;
-    //this.pepe.relatedXPos += this.pepe.speed;
-  }
-  if (this.pepe.isMovingLeft && this.xPos < 0) {
-    this.xPos += this.pepe.speed;
-    //this.pepe.relatedXPos -= this.pepe.speed;
-  }
+  listenForKeys(level.pepe);
 }
-
-World.prototype.draw = function () {
-  //console.log('CHAR MOVES R ' + char.isMovingRight + ' CHAR MOVES L ' + char.isMovingLeft);
-  //console.log('WORLD XPOS: ', this.xPos);
-  //console.log('WORLD WIDTH', this.width);
-  this.sky.draw();
-  for (let i = 0; i < this.scenes.length; i++) {
-    this.scenes[i].draw(this.xPos);
-  }
-  for (let i = 0; i < this.enemies.length; i++) {
-    this.enemies[i].moveEnemy();
-    this.enemies[i].draw(this.xPos);
-  }
-  this.pepe.draw();
-};
-
-let Scene = function (xPos) {
-  this.width = 2 * canvas.width; // one scene consiste of two backgrounds back to back, where one background is one canvas width large
-  this.height = canvas.height;
-  this.xPos = xPos; // world related xPos
-  this.backgrounds = {
-    grounds: [new Background(this.xPos, "img/grounds/ground_bg_1.png", 1), new Background(this.xPos + canvas.width, "img/grounds/ground_bg_2.png", 1)],
-    backgrounds1: [new Background(this.xPos, "img/background1/bg1_1.png", 0.65), new Background(this.xPos + canvas.width, "img/background1/bg1_2.png", 0.65)],
-    backgrounds2: [new Background(this.xPos, "img/background2/bg2_1.png", 0.4), new Background(this.xPos + canvas.width, "img/background2/bg2_2.png", 0.4)],
-    clouds: [new Clouds(this.xPos, 0, "img/clouds/cloud_bg_1.png", 0.5, -1, 0.1), new Clouds(this.xPos + canvas.width, 0, "img/clouds/cloud_bg_2.png", 0.1, 1, 0.1)]
-  };
-};
-
-Scene.prototype.draw = function (movement) {
-  //first canvas image
-  this.backgrounds.clouds[0].moveClouds();
-  this.backgrounds.clouds[0].draw(movement);
-  this.backgrounds.backgrounds2[0].draw(movement);
-  this.backgrounds.backgrounds1[0].draw(movement);
-  this.backgrounds.grounds[0].draw(movement);
-  //second canvas image
-  this.backgrounds.clouds[1].moveClouds();
-  this.backgrounds.clouds[1].draw(movement);
-  this.backgrounds.backgrounds2[1].draw(movement);
-  this.backgrounds.backgrounds1[1].draw(movement);
-  this.backgrounds.grounds[1].draw(movement);
-};
-
-let Background = function (xPos, src, distance) {
-  this.width = canvas.width;
-  this.height = canvas.height;
-  this.xPos = xPos; //world related xPos
-  this.yPos = 0;
-  this.base_image = new Image();
-  this.base_image.src = src;
-  this.distance = distance; // use to calculate world movement offset
-  this.finalXPos = xPos; // Character related xPos
-};
-
-Background.prototype.draw = function (movement = 0) { //if no movement given. background's final possition equals world's related xPos
-  this.finalXPos = movement * this.distance + this.xPos;
-  if (this.finalXPos > (-canvas.width) && this.finalXPos < canvas.width) { //render image
-    if (this.base_image.complete) {
-      ctx.drawImage(this.base_image, this.finalXPos, this.yPos, this.width, this.height);
-    } else {
-      //console.log('IMG BACKGROUND ' + this.base_image.src + ' NOT COMPLETE');
-    }
-  }
-};
-
-let Clouds = function (xPos, yPos, imgSrc, cloudsWindOffset, windDirection, distance) {
-  Background.call(this, xPos, imgSrc, distance);
-  this.ypos = yPos;
-  this.cloudsWindOffset = cloudsWindOffset;
-  this.windDirection = windDirection;
-};
-
-Clouds.prototype = Object.create(Background.prototype);
-Clouds.prototype.moveClouds = function () {
-  this.xPos = (this.xPos - this.cloudsWindOffset);
-}
-
-let Character = function (xPos, yPos, scale, animations, status, speed) {
-  this.xPos = xPos; //World related xPos
-  this.yPos = yPos;
-  this.GROUND_POS = yPos;
-  this.scale = scale;
-  this.animations = animations;
-  this.status = status; //used to set the type of charater animation
-  this.direction = RIGHT; //used to set the direction of character animation
-  this.imgIndex = 0;
-  this.base_image = new Image();
-  /*this.base_image.src = this.animations[this.status][this.direction][this.imgIndex];
-  this.width = this.base_image.width * this.scale;
-  this.height = this.base_image.height * this.scale;*/
-  this.energy = 100;
-  this.speed = speed; // controls how fast the world is moving if character is moving
-  this.bottles = 0;
-  /*boolean variables used to set and controle the status variable of character 
-  * collision has first priority; if is colliding, status equals hits and no other status checks are made
-  * next is jumping and landing prior to other stats;
-  * then moving left or right
-  * last is idle and long-idle
-  */
-  this.isMovingRight = false;
-  this.isMovingLeft = false;
-  this.isColliding = false;
-  this.isJumping = false;
-  this.isLanding = false;
-  this.isIdle = true;
-  this.isLongIdle = false;
-  this.lastJumpStarted = 0;
-  this.JUMP_TIME = 600;
-  //this.finalXPos = this.xPos;
-};
-
-Character.prototype.colliding = function (element) {
-  return ((element.finalXPos - this.xPos + 10) < (this.base_image.width * this.scale - 40) && (this.xPos - element.finalXPos + 40) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.base_image.height * this.scale));
-}
-
-Character.prototype.checkForCollision = function (elements) {
-  for (let i = 0; i < elements.length; i++) {
-    if (this.colliding(elements[i])) {
-      this.isColliding = true;
-      //console.log('COLLIDING :' + this.isColliding);
-      break;
-    } else {
-      this.isColliding = false;
-      //console.log('COLLIDING :' + this.isColliding);
-    }
-  }
-}
-
-Character.prototype.checkForJump = function () {
-  let timePassedSinceJump = new Date().getTime() - this.lastJumpStarted;
-  if (timePassedSinceJump < this.JUMP_TIME) {
-    //console.log('TIME PASSED SINCE JUMP ' + timePassedSinceJump + ' JUMP TIME' + this.JUMP_TIME + ' CHARACTER POS Y ' + this.yPos + ' GROUND POS ' + this.GROUND_POS + ' CHAR IMG' + this.base_image.src);
-    this.isLanding = false;
-    if (timePassedSinceJump > this.JUMP_TIME / 2) {
-      this.yPos -= 10;
-    }
-  } else {//check falling
-    this.isLanding = true;
-    this.isJumping = false;
-    if (this.yPos < this.GROUND_POS) {
-      //console.log('TIME PASSED SINCE JUMP ' + timePassedSinceJump + ' JUMP TIME' + this.JUMP_TIME + ' CHARACTER POS Y ' + this.yPos + ' GROUND POS ' + this.GROUND_POS + ' CHAR IMG' + this.base_image.src);
-      this.yPos += 10;
-    } else {
-      //AUDIO_LAND.play();
-      this.isLanding = false;
-    }
-  }
-}
-
-Character.prototype.setStatus = function () {
-  if (this.isColliding) {
-    this.status = 'hits';
-  } else if (this.isJumping || this.isLanding) {
-    if (this.isJumping) {
-      this.status = 'jumps';
-    }
-    if (this.isLanding) {
-      this.status = 'lands';
-    }
-  } else if (this.isMovingLeft || this.isMovingRight) {
-    this.status = 'walks';
-  } else {
-    this.status = 'idles';
-  }
-  //console.log('CHAR STATUS: ' + this.status);
-};
-
-Character.prototype.draw = function () {
-  this.imgIndex = this.imgIndex % this.animations[this.status][this.direction].length;
-  this.base_image.src = this.animations[this.status][this.direction][this.imgIndex++];
-  if (this.base_image.complete) {
-    ctx.drawImage(this.base_image, this.xPos, this.yPos, this.base_image.width * this.scale, this.base_image.height * this.scale);
-  } else {
-    console.log('IMG CHAR ' + this.base_image.src + ' NOT COMPLETE');
-  }
-};
-
-let Enemy = function (xPos, yPos, scale, animations, status, speed) {
-  this.xPos = xPos; //world related xPos
-  this.yPos = yPos;
-  this.scale = scale;
-  this.base_image = new Image();
-  this.imgIndex = 0;
-  this.animations = animations;
-  this.status = status;
-  this.speed = speed;
-  this.finalXPos = this.xPos; //character related xpos
-};
-
-Enemy.prototype.moveEnemy = function () {
-  this.xPos -= this.speed;
-}
-
-Enemy.prototype.draw = function (movement) {
-  this.finalXPos = movement + this.xPos;
-  if (this.finalXPos > (-canvas.width) && this.finalXPos < canvas.width) { //render image
-    this.imgIndex = this.imgIndex % this.animations[this.status].length;
-    this.base_image.src = this.animations[this.status][this.imgIndex++];
-    if (this.base_image.complete) {
-      ctx.drawImage(this.base_image, this.finalXPos, this.yPos, this.base_image.width * this.scale, this.base_image.height * this.scale);
-    } else {
-      //console.log('IMG ENEMY ' + this.base_image.src + ' NOT COMPLETE');
-    }
-  }
-};
-
-let Boss = function (xPos, yPos, scale, animations, status, speed) {
-  Enemy.call(this, xPos, yPos, scale, animations, status, speed);
-  this.energy = 100;
-};
-
-Boss.prototype = Object.create(Enemy.prototype);
+window.addEventListener('load', init);
 
 function listenForKeys(character) {
   document.addEventListener("keydown", function (e) {
@@ -338,8 +36,13 @@ function listenForKeys(character) {
       character.direction = LEFT;
       //moveLeft
     }
-    if (k == "d" && this.bottels > 0) {
-      character.bottels--;
+    if (k == "d" && character.bottles > 0) {
+      let timePassed = new Date().getTime() - character.bottleThrowTime;
+      if (timePassed > 1000) {
+        character.bottles--;
+        character.bottleThrowTime = new Date().getTime();
+        console.log('bottle-throw');
+      }
       //throw bottle
     }
     //console.log(k);
@@ -357,30 +60,6 @@ function listenForKeys(character) {
     }
   });
 }
-
-let canvas;
-let ctx;
-
-function init() {
-  canvas = document.getElementById('canvas');
-  ctx = canvas.getContext("2d");
-  let chickensSmall = [500, 700, 1200];
-  let chickensBig = [900, 1200, 2000];
-  let bosses = [2000, 5000];
-  let level = new World(10, chickensSmall, chickensBig, bosses);
-  //let pepe = new Character(canvas.width * 0.2, canvas.height * 0.2, canvas.width * 0.05, canvas.height * 0.365, 0.2);
-  
-  setInterval(function () {
-    level.pepe.checkForJump();
-    level.pepe.checkForCollision(level.enemies);
-    level.pepe.setStatus();
-    level.updateWorld();
-    level.draw();
-    
-  }, 1000 / 60);
-  listenForKeys(level.pepe);
-}
-
 
 /*
 //--------------Game Config--------------
