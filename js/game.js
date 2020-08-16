@@ -1,5 +1,6 @@
 import {World} from '../models/world.js'
 import {RIGHT, LEFT} from '../models/constants.js'
+import { HUD } from '../models/HUD.js';
 function init() {
   let chickensSmallXpos = [500, 700, 1200];
   let chickensBigXpos = [900, 1200, 2000];
@@ -9,6 +10,7 @@ function init() {
   let level = new World(10, chickensSmallXpos, chickensBigXpos, bossesXpos, coinsXpos, bottlesXpos);
 
   level.pepe.checkForJump();
+  level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
   level.pepe.setStatus();
   level.updateWorld();
   level.draw();
@@ -25,6 +27,7 @@ function listenForKeys(character) {
       //perform jump
       character.lastJumpStarted = new Date().getTime();
       character.isJumping = true;
+      character.imgIndex = 0;
     }
     if (k == "ArrowRight") {
       character.isMovingRight = true;

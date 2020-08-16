@@ -13,7 +13,7 @@ export class World {
         this.enemies = [];
         this.coins = [];
         this.bottles = [];
-        this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeImages, 'idles', 15.75 * 0.2);
+        this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeImages, 'idle', 15.75 * 0.2);
         this.scenes = [];
         this.sky = new Background(this.xPos, 0, "img/sky.png", 1); // static, never moves
 
@@ -54,7 +54,7 @@ export class World {
         this.scenes.push(new Scene(xPos));
     }
     addCoins(xPos) {
-        this.coins.push(new Item(xPos, 300, 0.2, 'spin', coinImages));
+        this.coins.push(new Item(xPos, 255, 0.5, 'spin', coinImages));
     }
     addBottles(xPos) {
         this.bottles.push(new Item(xPos, 350, 0.2, 'buried',bottleImages));
@@ -74,16 +74,25 @@ export class World {
             this.scenes[i].move(this.xPos);
         }
         for (let i = 0; i < this.enemies.length; i++) {
-            this.enemies[i].updateImg();
+            this.enemies[i].updateImg(100);
             this.enemies[i].move(this.xPos);
         }
         for (let i = 0; i < this.coins.length; i++) {
+            this.coins[i].updateImg(500);
             this.coins[i].move(this.xPos);
         }
         for (let i = 0; i < this.bottles.length; i++) {
             this.bottles[i].move(this.xPos);
         }
-        this.pepe.updateImg();
+        if(this.pepe.isJumping || this.pepe.isLanding){
+             this.pepe.updateImg(200);
+        }else{
+            this.pepe.updateImg(100);
+        }
+        
+        document.getElementById("life-bar").src = "img/HUD/life-bar/life_"+this.pepe.energy+".png";
+        document.getElementById("bottles").innerHTML = "x "+this.pepe.bottles;
+        document.getElementById("coins").innerHTML = "x "+this.pepe.coins;
         requestAnimationFrame(this.updateWorld.bind(this));
     }
 
@@ -97,12 +106,14 @@ export class World {
             this.enemies[i].draw();
         }
         for (let i = 0; i < this.coins.length; i++) {
+           
             this.coins[i].draw();
         }
         for (let i = 0; i < this.bottles.length; i++) {
             this.bottles[i].draw();
         }
         this.pepe.draw();
+        this.pepe.throwBottle();
         requestAnimationFrame(this.draw.bind(this));
     }
 }

@@ -10,6 +10,27 @@
 </head>
 <body>
     <h1>EL POLLO LOCO</h1>
-    <canvas id="canvas" width="720" height="480"></canvas>
+
+    <div id="hud">
+        <div  class="hud-element">
+            <img id="life-bar" src="img/HUD/life-bar/life_100.png">
+        </div>
+
+        <div id="item-list" class="hud-element">
+            <div  class="item">
+                <img src="img/HUD/bottle.png">
+                <p id="bottles" class="counter"></p>
+            </div>
+            <div class="item">
+                <img src="img/HUD/coin.png">
+                <p id="coins" class="counter"></p>
+            </div>
+        </div>
+
+    </div>
+    
+    <canvas id="canvas" width="720" height="480">
+       
+    </canvas>
 </body>
 </html>

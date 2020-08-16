@@ -31,7 +31,7 @@ export class Character extends Creature {
     }
 
     colliding(element) {
-        return ((element.finalXPos - this.xPos + 10) < (this.base_image.width * this.scale - 40) && (this.xPos - element.finalXPos + 40) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.base_image.height * this.scale));
+        return ((element.finalXPos - this.xPos + 10) < (this.animation[this.status][this.direction][this.imgIndex].width * this.scale - 40) && (this.xPos - element.finalXPos + 40) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.animation[this.status][this.direction][this.imgIndex].height * this.scale));
     }
     checkForCollision(enemies, bottles, coins) {
         //check collision with enemies
@@ -44,6 +44,7 @@ export class Character extends Creature {
                         this.energy = 100;
                     }
                     this.energy -= enemies[i].damage;
+                    
                 }
                 this.isColliding = true;
                 break;
@@ -55,6 +56,7 @@ export class Character extends Creature {
         for (let i = 0; i < bottles.length; i++) {
             if (this.colliding(bottles[i])) {
                 this.bottles++;
+               
                 bottles.splice(i, 1);
             }
         }
@@ -62,9 +64,14 @@ export class Character extends Creature {
         for (let i = 0; i < coins.length; i++) {
             if (this.colliding(coins[i])) {
                 this.coins++;
+               
                 coins.splice(i, 1);
             }
         }
+        requestAnimationFrame(function(){
+            this.checkForCollision(enemies, bottles, coins);
+            
+        }.bind(this));
     }
 
     checkForJump() {
@@ -77,11 +84,12 @@ export class Character extends Creature {
             }
         }
         else { //check falling
-            this.isLanding = true;
+           
             this.isJumping = false;
             if (this.yPos < this.GROUND_POS) {
                 //console.log('TIME PASSED SINCE JUMP ' + timePassedSinceJump + ' JUMP TIME' + this.JUMP_TIME + ' CHARACTER POS Y ' + this.yPos + ' GROUND POS ' + this.GROUND_POS + ' CHAR IMG' + this.base_image.src);
                 this.yPos += 10;
+                this.isLanding = true;
             }
             else {
                 //AUDIO_LAND.play();
@@ -115,13 +123,14 @@ export class Character extends Creature {
     draw() {
         if (this.imgIndex >= this.animation[this.status][this.direction].length)
                 this.imgIndex = 0;
+        this.base_image = this.animation[this.status][this.direction][this.imgIndex]
         ctx.drawImage(this.animation[this.status][this.direction][this.imgIndex], this.finalXPos, this.yPos, this.animation[this.status][this.direction][this.imgIndex].width * this.scale, this.animation[this.status][this.direction][this.imgIndex].height * this.scale);
         //requestAnimationFrame(this.draw.bind(this));
     }
 
-    updateImg() {
+    updateImg(interval) {
         let timePassedSinceLastCall = new Date().getTime() - this.start;
-        if (timePassedSinceLastCall > 100) {
+        if (timePassedSinceLastCall > interval) {
             this.imgIndex++;
             
             
