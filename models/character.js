@@ -1,4 +1,4 @@
-import { canvas, ctx, RIGHT, LEFT } from "./constants.js"
+import { canvas, ctx, RIGHT, LEFT, GRAVITY } from "./constants.js"
 import { Creature } from "./creature.js"
 import { Item } from "./item.js";
 import { bottleImages } from "./animations.js";
@@ -22,6 +22,8 @@ export class Character extends Creature {
         this.lastCollisionTime = 0;
         this.JUMP_TIME = 600;
         this.bottleThrowTime = 0;
+        this.bottleThrowVelocity = 1.7;
+        this.bottleThrowAngle = 1; /* Radians */
         this.bottleThrowImg = 0;
         this.createObjectAnimations(images);
         this.start = new Date().getTime();
@@ -147,20 +149,19 @@ export class Character extends Creature {
     throwBottle() {
         if (this.bottleThrowTime) {
             let timePassed = new Date().getTime() - this.bottleThrowTime;
-            let gravity = Math.pow(9.81, timePassed / 300);
-            this.bottleThrow.finalXPos = 70 + (timePassed * 0.7);
-            this.bottleThrow.yPos = 300 - (timePassed * 0.4 - gravity);
-            console.log("YPOS BOTTLE", this.bottleThrow.yPos);
-            console.log("XPOS BOTTLE", this.bottleThrow.finalXPos);
-
-            if (this.bottleThrow.yPos > 300 && timePassed > 500) {
+            if (this.bottleThrow.yPos > 350 && timePassed > 500) {
                 this.bottleThrow.status = 'splash';
+                this.bottleThrow.updateImg(200);
+                
+                this.bottleThrow.draw();
             } else {
                 this.bottleThrow.status = 'throwed';
+                this.bottleThrow.yPos = 300 - (Math.sin(1) * this.bottleThrowVelocity * timePassed + (0.5 * GRAVITY * timePassed * timePassed));
+                this.bottleThrow.finalXPos = 70 + (timePassed * (Math.cos(1) * this.bottleThrowVelocity));
+                this.bottleThrow.updateImg(100);
+                this.bottleThrow.draw();
             }
-
-            this.bottleThrow.updateImg(100);
-            this.bottleThrow.draw();
+           
         }
     }
 }
