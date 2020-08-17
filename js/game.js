@@ -27,7 +27,6 @@ function listenForKeys(character) {
       //perform jump
       character.lastJumpStarted = new Date().getTime();
       character.isJumping = true;
-      character.imgIndex = 0;
     }
     if (k == "ArrowRight") {
       character.isMovingRight = true;

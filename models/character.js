@@ -1,12 +1,15 @@
 import { canvas, ctx, RIGHT, LEFT } from "./constants.js"
 import { Creature } from "./creature.js"
+import { Item } from "./item.js";
+import { bottleImages } from "./animations.js";
 export class Character extends Creature {
     constructor(xPos, yPos, scale, images, status, speed) {
         super(xPos, yPos, scale, images, status, speed);
         this.GROUND_POS = yPos;
         this.direction = RIGHT; //used to set the direction of character animation
         this.energy = 100;
-        this.bottles = 0;
+        this.bottles = 50;
+        this.bottleThrow = new Item(this.xPos, this.yPos, 0.2, 'throwed', bottleImages);
         this.coins = 0;
         this.isMovingRight = false;
         this.isMovingLeft = false;
@@ -44,7 +47,7 @@ export class Character extends Creature {
                         this.energy = 100;
                     }
                     this.energy -= enemies[i].damage;
-                    
+
                 }
                 this.isColliding = true;
                 break;
@@ -56,7 +59,7 @@ export class Character extends Creature {
         for (let i = 0; i < bottles.length; i++) {
             if (this.colliding(bottles[i])) {
                 this.bottles++;
-               
+
                 bottles.splice(i, 1);
             }
         }
@@ -64,13 +67,13 @@ export class Character extends Creature {
         for (let i = 0; i < coins.length; i++) {
             if (this.colliding(coins[i])) {
                 this.coins++;
-               
+
                 coins.splice(i, 1);
             }
         }
-        requestAnimationFrame(function(){
+        requestAnimationFrame(function () {
             this.checkForCollision(enemies, bottles, coins);
-            
+
         }.bind(this));
     }
 
@@ -84,7 +87,7 @@ export class Character extends Creature {
             }
         }
         else { //check falling
-           
+
             this.isJumping = false;
             if (this.yPos < this.GROUND_POS) {
                 //console.log('TIME PASSED SINCE JUMP ' + timePassedSinceJump + ' JUMP TIME' + this.JUMP_TIME + ' CHARACTER POS Y ' + this.yPos + ' GROUND POS ' + this.GROUND_POS + ' CHAR IMG' + this.base_image.src);
@@ -122,7 +125,7 @@ export class Character extends Creature {
 
     draw() {
         if (this.imgIndex >= this.animation[this.status][this.direction].length)
-                this.imgIndex = 0;
+            this.imgIndex = 0;
         this.base_image = this.animation[this.status][this.direction][this.imgIndex]
         ctx.drawImage(this.animation[this.status][this.direction][this.imgIndex], this.finalXPos, this.yPos, this.animation[this.status][this.direction][this.imgIndex].width * this.scale, this.animation[this.status][this.direction][this.imgIndex].height * this.scale);
         //requestAnimationFrame(this.draw.bind(this));
@@ -132,11 +135,11 @@ export class Character extends Creature {
         let timePassedSinceLastCall = new Date().getTime() - this.start;
         if (timePassedSinceLastCall > interval) {
             this.imgIndex++;
-            
-            
-        //console.log('img index ' + this.imgIndex + 'status ' + this.status);
-        //console.log('IMG SRC' + this.animation[this.status][this.direction][this.imgIndex].src);
-        this.start = new Date().getTime();
+
+
+            //console.log('img index ' + this.imgIndex + 'status ' + this.status);
+            //console.log('IMG SRC' + this.animation[this.status][this.direction][this.imgIndex].src);
+            this.start = new Date().getTime();
         }
         // requestAnimationFrame(this.updateImg.bind(this));
     }
@@ -145,15 +148,19 @@ export class Character extends Creature {
         if (this.bottleThrowTime) {
             let timePassed = new Date().getTime() - this.bottleThrowTime;
             let gravity = Math.pow(9.81, timePassed / 300);
-            let throwBottle_x = 70 + (timePassed * 0.7);
-            let throwBottle_y = 300 - (timePassed * 0.4 - gravity);
-            let base_image = new Image();
-            this.bottleThrowImg++;
-            this.bottleThrowImg = this.bottleThrowImg % 3;
-            base_image.src = 'img/bottle-throw/bottleThrow_' + this.bottleThrowImg + '.png';
-            if (base_image.complete) {
-                ctx.drawImage(base_image, throwBottle_x, throwBottle_y, base_image.width * 0.2, base_image.height * 0.2);
+            this.bottleThrow.finalXPos = 70 + (timePassed * 0.7);
+            this.bottleThrow.yPos = 300 - (timePassed * 0.4 - gravity);
+            console.log("YPOS BOTTLE", this.bottleThrow.yPos);
+            console.log("XPOS BOTTLE", this.bottleThrow.finalXPos);
+
+            if (this.bottleThrow.yPos > 300 && timePassed > 500) {
+                this.bottleThrow.status = 'splash';
+            } else {
+                this.bottleThrow.status = 'throwed';
             }
+
+            this.bottleThrow.updateImg(100);
+            this.bottleThrow.draw();
         }
     }
 }
