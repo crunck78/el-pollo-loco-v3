@@ -1,6 +1,6 @@
 import { canvas, ctx, RIGHT, LEFT, GRAVITY } from "./constants.js"
 import { Creature } from "./creature.js"
-import { Item } from "./item.js";
+import { BottleThrow } from "./bottleThrow.js";
 import { bottleImages } from "./animations.js";
 export class Character extends Creature {
     constructor(xPos, yPos, scale, images, status, speed) {
@@ -9,7 +9,7 @@ export class Character extends Creature {
         this.direction = RIGHT; //used to set the direction of character animation
         this.energy = 100;
         this.bottles = 50;
-        this.bottleThrow = new Item(this.xPos, this.yPos, 0.2, 'throwed', bottleImages);
+        this.bottleThrow = new BottleThrow(this.xPos, this.yPos, 0.2, 'throwed', bottleImages);
         this.coins = 0;
         this.isMovingRight = false;
         this.isMovingLeft = false;
@@ -21,10 +21,6 @@ export class Character extends Creature {
         this.lastJumpStarted = 0;
         this.lastCollisionTime = 0;
         this.JUMP_TIME = 600;
-        this.bottleThrowTime = 0;
-        this.bottleThrowVelocity = 1.7;
-        this.bottleThrowAngle = 1; /* Radians */
-        this.bottleThrowImg = 0;
         this.createObjectAnimations(images);
         this.start = new Date().getTime();
     }
@@ -144,24 +140,5 @@ export class Character extends Creature {
             this.start = new Date().getTime();
         }
         // requestAnimationFrame(this.updateImg.bind(this));
-    }
-
-    throwBottle() {
-        if (this.bottleThrowTime) {
-            let timePassed = new Date().getTime() - this.bottleThrowTime;
-            if (this.bottleThrow.yPos > 350 && timePassed > 500) {
-                this.bottleThrow.status = 'splash';
-                this.bottleThrow.updateImg(200);
-                
-                this.bottleThrow.draw();
-            } else {
-                this.bottleThrow.status = 'throwed';
-                this.bottleThrow.yPos = 300 - (Math.sin(1) * this.bottleThrowVelocity * timePassed + (0.5 * GRAVITY * timePassed * timePassed));
-                this.bottleThrow.finalXPos = 70 + (timePassed * (Math.cos(1) * this.bottleThrowVelocity));
-                this.bottleThrow.updateImg(100);
-                this.bottleThrow.draw();
-            }
-           
-        }
     }
 }

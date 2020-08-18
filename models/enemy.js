@@ -1,4 +1,4 @@
-import {  ctx } from "./constants.js"
+import { ctx } from "./constants.js"
 import { Creature } from "./creature.js"
 export class Enemy extends Creature {
     constructor(xPos, yPos, scale, images, status, speed, type) {
@@ -14,7 +14,7 @@ export class Boss extends Enemy {
     }
 
     draw() {
-        ctx.drawImage(this.animation['bossLifeBar'][5], this.finalXPos, this.yPos - 50,this.animation['bossLifeBar'][5].width * this.scale,this.animation['bossLifeBar'][5].height * this.scale);
+        ctx.drawImage(this.animation['bossLifeBar'][this.energy / 20], this.finalXPos, this.yPos - 50, this.animation['bossLifeBar'][this.energy / 20].width * this.scale, this.animation['bossLifeBar'][this.energy / 20].height * this.scale);
         super.draw();
     }
 }

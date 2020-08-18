@@ -37,18 +37,14 @@ export class Item extends Model {
         let timePassedSinceLastCall = new Date().getTime() - this.start;
         if (timePassedSinceLastCall > interval) {
             this.imgIndex++;
-            
-            
-        //console.log('img index ' + this.imgIndex + 'status ' + this.status);
-        //console.log('IMG SRC' + this.animation[this.status][this.direction][this.imgIndex].src);
-        this.start = new Date().getTime();
+            this.start = new Date().getTime();
         }
     }
 
     draw() {
         if (this.imgIndex >= this.animation[this.status].length)
             this.imgIndex = 0;
-        this.base_image = this.animation[this.status][this.imgIndex]
+        this.base_image = this.animation[this.status][this.imgIndex];
         ctx.drawImage(this.animation[this.status][this.imgIndex], this.finalXPos, this.yPos, this.animation[this.status][this.imgIndex].width * this.scale, this.animation[this.status][this.imgIndex].height * this.scale);
         //requestAnimationFrame(this.draw.bind(this));
     }

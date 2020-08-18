@@ -48,7 +48,7 @@ export class World {
         this.enemies.push(new Enemy(xPos, 365, 0.2, chickenBigImages, 'walk', Math.random() * (7.875 * 0.2)));
     }
     addBoss(xPos) {
-        this.enemies.push(new Boss(xPos, 200, 0.2, bossImages, 'walk', Math.random() * (7.875 * 0.2)));
+        this.enemies.push(new Boss(xPos, 200, 0.2, bossImages, 'alert', Math.random() * (7.875 * 0.2)));
     }
     addScene(xPos) {
         this.scenes.push(new Scene(xPos));
@@ -57,7 +57,7 @@ export class World {
         this.coins.push(new Item(xPos, 255, 0.5, 'spin', coinImages));
     }
     addBottles(xPos) {
-        this.bottles.push(new Item(xPos, 350, 0.2, 'buried',bottleImages));
+        this.bottles.push(new Item(xPos, 350, 0.2, 'buried', bottleImages));
     }
 
     updateWorld() {
@@ -84,15 +84,16 @@ export class World {
         for (let i = 0; i < this.bottles.length; i++) {
             this.bottles[i].move(this.xPos);
         }
-        if(this.pepe.isJumping || this.pepe.isLanding){
-             this.pepe.updateImg(200);
-        }else{
+        if (this.pepe.isJumping || this.pepe.isLanding) {
+            this.pepe.updateImg(200);
+        } else {
             this.pepe.updateImg(100);
         }
-        
-        document.getElementById("life-bar").src = "img/HUD/life-bar/life_"+this.pepe.energy+".png";
-        document.getElementById("bottles").innerHTML = "x "+this.pepe.bottles;
-        document.getElementById("coins").innerHTML = "x "+this.pepe.coins;
+
+        document.getElementById("life-bar").src = "img/HUD/life-bar/life_" + this.pepe.energy + ".png";
+        document.getElementById("bottles").innerHTML = "x " + this.pepe.bottles;
+        document.getElementById("coins").innerHTML = "x " + this.pepe.coins;
+
         requestAnimationFrame(this.updateWorld.bind(this));
     }
 
@@ -102,18 +103,24 @@ export class World {
             this.scenes[i].draw();
         }
         for (let i = 0; i < this.enemies.length; i++) {
-            this.enemies[i].moveCreature();
+            if (this.enemies[i].status != 'alert' && this.enemies[i].status != 'dead') {
+                this.enemies[i].moveCreature();
+            }
+
             this.enemies[i].draw();
         }
         for (let i = 0; i < this.coins.length; i++) {
-           
+
             this.coins[i].draw();
         }
         for (let i = 0; i < this.bottles.length; i++) {
             this.bottles[i].draw();
         }
         this.pepe.draw();
-        this.pepe.throwBottle();
+        if (this.pepe.bottleThrow.bottleThrowTime) {
+            this.pepe.bottleThrow.throwBottle();
+            this.pepe.bottleThrow.checkForBottleHit(this.enemies);
+        }
         requestAnimationFrame(this.draw.bind(this));
     }
 }

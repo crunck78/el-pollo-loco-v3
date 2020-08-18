@@ -1,6 +1,6 @@
-import {World} from '../models/world.js'
-import {RIGHT, LEFT} from '../models/constants.js'
-import { HUD } from '../models/HUD.js';
+import { World } from '../models/world.js'
+import { RIGHT, LEFT } from '../models/constants.js'
+
 function init() {
   let chickensSmallXpos = [500, 700, 1200];
   let chickensBigXpos = [900, 1200, 2000];
@@ -39,10 +39,10 @@ function listenForKeys(character) {
       //moveLeft
     }
     if (k == "d" && character.bottles > 0) {
-      let timePassed = new Date().getTime() - character.bottleThrowTime;
+      let timePassed = new Date().getTime() - character.bottleThrow.bottleThrowTime;
       if (timePassed > 1000) {
         character.bottles--;
-        character.bottleThrowTime = new Date().getTime();
+        character.bottleThrow.bottleThrowTime = new Date().getTime();
         console.log('bottle-throw');
       }
       //throw bottle

@@ -1,17 +1,17 @@
-body{
+body {
     font-family: "Bradley Hand ITC";
     background-color: #cccccc;
 }
 
-
-
-#hud{
+#hud {
     position: absolute;
     top: 79px;
     left: 8px;
     right: 0;
-    width: 688px; /*canvas width - hud padding*/
-    height: 449px; /*canvas height - hud padding*/
+    width: 688px;
+    /*canvas width - hud padding*/
+    height: 449px;
+    /*canvas height - hud padding*/
     /*background-color: grey;*/
     z-index: 1;
     display: flex;
@@ -20,35 +20,35 @@ body{
     padding: 16px;
 }
 
-#life-bar{
+#life-bar {
     width: 200px;
     object-fit: contain;
 }
 
-#item-list img{
+#item-list img {
     width: 60px;
     height: 60px;
     object-fit: cover;
 }
 
-.hud-element{
+.hud-element {
     height: fit-content;
 }
 
-#item-list{
+#item-list {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.item{
+.item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-right: 40px;
 }
 
-.counter{
-   font-size: 20px;
-   color: white;
+.counter {
+    font-size: 20px;
+    color: white;
 }
