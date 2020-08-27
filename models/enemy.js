@@ -14,7 +14,8 @@ export class Boss extends Enemy {
     }
 
     draw() {
-        ctx.drawImage(this.animation['bossLifeBar'][this.energy / 20], this.finalXPos, this.yPos - 50, this.animation['bossLifeBar'][this.energy / 20].width * this.scale, this.animation['bossLifeBar'][this.energy / 20].height * this.scale);
+        if(this.status != 'dead')
+            ctx.drawImage(this.animation['bossLifeBar'][this.energy / 20], this.finalXPos, this.yPos - 50, this.animation['bossLifeBar'][this.energy / 20].width * this.scale, this.animation['bossLifeBar'][this.energy / 20].height * this.scale);
         super.draw();
     }
 }

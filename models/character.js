@@ -32,25 +32,27 @@ export class Character extends Creature {
     }
 
     colliding(element) {
-        return ((element.finalXPos - this.xPos + 10) < (this.animation[this.status][this.direction][this.imgIndex].width * this.scale - 40) && (this.xPos - element.finalXPos + 40) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.animation[this.status][this.direction][this.imgIndex].height * this.scale));
+        return ((element.finalXPos - this.xPos + 10) < (this.base_image.width * this.scale - 40) && (this.xPos - element.finalXPos + 40) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.base_image.height * this.scale));
     }
     checkForCollision(enemies, bottles, coins) {
         //check collision with enemies
         for (let i = 0; i < enemies.length; i++) {
-            if (this.colliding(enemies[i])) {
-                let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
-                if (timePassedSinceCollision > 1000) {
-                    this.lastCollisionTime = new Date().getTime();
-                    if (this.energy == 0) {
-                        this.energy = 100;
-                    }
-                    this.energy -= enemies[i].damage;
+            if (enemies[i].status != 'dead') {
+                if (this.colliding(enemies[i])) {
+                    let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
+                    if (timePassedSinceCollision > 1000) {
+                        this.lastCollisionTime = new Date().getTime();
+                        if (this.energy == 0) {
+                            this.energy = 100;
+                        }
+                        this.energy -= enemies[i].damage;
 
+                    }
+                    this.isColliding = true;
+                    break;
+                } else {
+                    this.isColliding = false;
                 }
-                this.isColliding = true;
-                break;
-            } else {
-                this.isColliding = false;
             }
         }
         //check collision with bottles
@@ -124,8 +126,9 @@ export class Character extends Creature {
     draw() {
         if (this.imgIndex >= this.animation[this.status][this.direction].length)
             this.imgIndex = 0;
-        this.base_image = this.animation[this.status][this.direction][this.imgIndex]
-        ctx.drawImage(this.animation[this.status][this.direction][this.imgIndex], this.finalXPos, this.yPos, this.animation[this.status][this.direction][this.imgIndex].width * this.scale, this.animation[this.status][this.direction][this.imgIndex].height * this.scale);
+        this.base_image = this.animation[this.status][this.direction][this.imgIndex];
+        if (this.base_image.complete)
+            ctx.drawImage(this.base_image, this.finalXPos, this.yPos, this.base_image.width * this.scale, this.base_image.height * this.scale);
         //requestAnimationFrame(this.draw.bind(this));
     }
 

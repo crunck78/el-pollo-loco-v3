@@ -4,10 +4,10 @@ import { RIGHT, LEFT } from '../models/constants.js'
 function init() {
   let chickensSmallXpos = [500, 700, 1200];
   let chickensBigXpos = [900, 1200, 2000];
-  let bossesXpos = [2000, 5000];
+  let bossesXpos = [2000, 5550];
   let coinsXpos = [500, 700, 1200, 900, 1200, 2000, 2300, , 3000, 5000];
   let bottlesXpos = [550, 750, 1250, 950, 1250, 2050, 2350, , 3100, 5300];
-  let level = new World(10, chickensSmallXpos, chickensBigXpos, bossesXpos, coinsXpos, bottlesXpos);
+  let level = new World(4, chickensSmallXpos, chickensBigXpos, bossesXpos, coinsXpos, bottlesXpos);
 
   level.pepe.checkForJump();
   level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);

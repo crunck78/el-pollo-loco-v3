@@ -30,11 +30,10 @@ export class BottleThrow extends Item {
                         if (timePassedSinceCollision > 1000) {
                             this.lastCollisionTime = new Date().getTime();
                             if (enemies[i].energy == 0) {
-                                enemies[i].energy = 100;
+                                enemies[i].status = 'dead';
                             }
                             enemies[i].energy -= 20;//damage
                         }
-
                     } else {
                         enemies[i].status = 'dead';
                     }

@@ -45,7 +45,7 @@ export class Item extends Model {
         if (this.imgIndex >= this.animation[this.status].length)
             this.imgIndex = 0;
         this.base_image = this.animation[this.status][this.imgIndex];
-        ctx.drawImage(this.animation[this.status][this.imgIndex], this.finalXPos, this.yPos, this.animation[this.status][this.imgIndex].width * this.scale, this.animation[this.status][this.imgIndex].height * this.scale);
+        ctx.drawImage(this.base_image, this.finalXPos, this.yPos,this.base_image.width * this.scale, this.base_image.height * this.scale);
         //requestAnimationFrame(this.draw.bind(this));
     }
 

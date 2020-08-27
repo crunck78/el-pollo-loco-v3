@@ -13,7 +13,7 @@ export class World {
         this.enemies = [];
         this.coins = [];
         this.bottles = [];
-        this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeImages, 'idle', 15.75 * 0.2);
+        this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeImages, 'idle', 15.75 * 0.8);
         this.scenes = [];
         this.sky = new Background(this.xPos, 0, "img/sky.png", 1); // static, never moves
 
@@ -70,20 +70,31 @@ export class World {
             //this.pepe.relatedXPos -= this.pepe.speed;
         }
 
-        for (let i = 0; i < this.scenes.length; i++) {
-            this.scenes[i].move(this.xPos);
+        if (this.xPos < 0 || this.xPos > -(this.width - canvas.width)) {
+            for (let i = 0; i < this.scenes.length; i++) {
+                this.scenes[i].move(this.xPos);
+            }
+            for (let i = 0; i < this.enemies.length; i++) {
+                this.enemies[i].updateImg(100);
+                this.enemies[i].move(this.xPos);
+            }
+            for (let i = 0; i < this.coins.length; i++) {
+                this.coins[i].updateImg(500);
+                this.coins[i].move(this.xPos);
+            }
+            for (let i = 0; i < this.bottles.length; i++) {
+                this.bottles[i].move(this.xPos);
+            }
         }
-        for (let i = 0; i < this.enemies.length; i++) {
-            this.enemies[i].updateImg(100);
-            this.enemies[i].move(this.xPos);
+
+        if (this.pepe.isMovingRight && this.xPos < -(this.width - canvas.width)) {
+            if (this.pepe.xPos < (canvas.width - (this.pepe.base_image.width * this.pepe.scale))) {
+                this.pepe.finalXPos += this.pepe.speed;
+                this.pepe.xPos = this.pepe.finalXPos;
+            }
         }
-        for (let i = 0; i < this.coins.length; i++) {
-            this.coins[i].updateImg(500);
-            this.coins[i].move(this.xPos);
-        }
-        for (let i = 0; i < this.bottles.length; i++) {
-            this.bottles[i].move(this.xPos);
-        }
+
+
         if (this.pepe.isJumping || this.pepe.isLanding) {
             this.pepe.updateImg(200);
         } else {
