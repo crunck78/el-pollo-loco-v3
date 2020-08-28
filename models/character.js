@@ -46,7 +46,6 @@ export class Character extends Creature {
                             this.energy = 100;
                         }
                         this.energy -= enemies[i].damage;
-
                     }
                     this.isColliding = true;
                     break;
@@ -101,40 +100,58 @@ export class Character extends Creature {
         }
         requestAnimationFrame(this.checkForJump.bind(this));
     }
-    setStatus() {
+    setStatus(actualStatus) {
         if (this.isColliding) {
-            this.status = 'hit';
+            if (actualStatus != 'hit') {
+                this.interval = 300;
+                this.imgIndex = 0;
+                this.status = 'hit';
+            }
+            
         }
         else if (this.isJumping || this.isLanding) {
-            if (this.isJumping) {
+            if (this.isJumping && actualStatus != 'jump') {
                 this.status = 'jump';
+                this.interval = this.JUMP_TIME / 2;
+                this.imgIndex = 0;
             }
-            if (this.isLanding) {
+            if (this.isLanding && actualStatus != 'land') {
                 this.status = 'land';
+                this.interval = this.JUMP_TIME / 2;
+                this.imgIndex = 0;
             }
         }
         else if (this.isMovingLeft || this.isMovingRight) {
-            this.status = 'walk';
+            if (actualStatus != 'walk') {
+                this.status = 'walk';
+                this.interval = this.speed * 50;
+                this.imgIndex = 0;
+            }
         }
         else {
-            this.status = 'idle';
+            this.interval = 200;
+            if (actualStatus != 'idle') {
+                this.status = 'idle';
+                this.imgIndex = 0;
+            }
         }
         //console.log('CHAR STATUS: ' + this.status);
-        requestAnimationFrame(this.setStatus.bind(this));
+        requestAnimationFrame(function () {
+            this.setStatus(this.status);
+        }.bind(this));
     }
 
     draw() {
         if (this.imgIndex >= this.animation[this.status][this.direction].length)
             this.imgIndex = 0;
         this.base_image = this.animation[this.status][this.direction][this.imgIndex];
-        if (this.base_image.complete)
-            ctx.drawImage(this.base_image, this.finalXPos, this.yPos, this.base_image.width * this.scale, this.base_image.height * this.scale);
+        ctx.drawImage(this.base_image, this.finalXPos, this.yPos, this.base_image.width * this.scale, this.base_image.height * this.scale);
         //requestAnimationFrame(this.draw.bind(this));
     }
 
-    updateImg(interval) {
+    updateImg() {
         let timePassedSinceLastCall = new Date().getTime() - this.start;
-        if (timePassedSinceLastCall > interval) {
+        if (timePassedSinceLastCall > this.interval) {
             this.imgIndex++;
 
 

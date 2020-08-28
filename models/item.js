@@ -11,6 +11,7 @@ export class Item extends Model {
         this.animation = {};
         this.createObjectAnimations(images);
         this.start = new Date().getTime();
+        this.interval = 0;
     }
 
     createObjectAnimations(images) {

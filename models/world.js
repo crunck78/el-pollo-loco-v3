@@ -13,7 +13,7 @@ export class World {
         this.enemies = [];
         this.coins = [];
         this.bottles = [];
-        this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeImages, 'idle', 15.75 * 0.8);
+        this.pepe = new Character(canvas.width * 0.05, canvas.height * 0.365, 0.2, pepeImages, 'idle', 15.75 * 0.2);
         this.scenes = [];
         this.sky = new Background(this.xPos, 0, "img/sky.png", 1); // static, never moves
 
@@ -61,7 +61,7 @@ export class World {
     }
 
     updateWorld() {
-        if (this.pepe.isMovingRight && this.xPos > -(this.width - canvas.width)) {
+        if (this.pepe.isMovingRight && this.xPos >= -(this.width - canvas.width)) {
             this.xPos -= this.pepe.speed;
             //this.pepe.relatedXPos += this.pepe.speed;
         }
@@ -70,7 +70,7 @@ export class World {
             //this.pepe.relatedXPos -= this.pepe.speed;
         }
 
-        if (this.xPos < 0 || this.xPos > -(this.width - canvas.width)) {
+        if (this.xPos < 0 || this.xPos >= -(this.width - canvas.width)) {
             for (let i = 0; i < this.scenes.length; i++) {
                 this.scenes[i].move(this.xPos);
             }
@@ -87,14 +87,14 @@ export class World {
             }
         }
 
-        if (this.pepe.isMovingRight && this.xPos < -(this.width - canvas.width)) {
-            if (this.pepe.xPos < (canvas.width - (this.pepe.base_image.width * this.pepe.scale))) {
+        if (this.pepe.isMovingRight && this.xPos <= -(this.width - canvas.width)) {
+            if (this.pepe.xPos <= (canvas.width - (this.pepe.base_image.width * this.pepe.scale))) {
                 this.pepe.finalXPos += this.pepe.speed;
                 this.pepe.xPos = this.pepe.finalXPos;
             }
         }
 
-        if (this.pepe.isMovingLeft && this.xPos < 0) {
+        if (this.pepe.isMovingLeft && this.xPos <= 0) {
             if (this.pepe.xPos > 0) {
                 this.pepe.finalXPos -= this.pepe.speed;
                 this.pepe.xPos = this.pepe.finalXPos;
