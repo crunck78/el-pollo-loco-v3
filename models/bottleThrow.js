@@ -9,12 +9,14 @@ export class BottleThrow extends Item {
         this.bottleThrowVelocity = 1.7;
         this.bottleThrowAngle = 1; /* Radians */
         this.lastCollisionTime = 0;
+        this.initialYPos = 0;
+        this.initialXPos = 0;
     }
 
     throwBottle() {
         let timePassed = new Date().getTime() - this.bottleThrowTime;
-        this.yPos = 300 - (Math.sin(1) * this.bottleThrowVelocity * timePassed + (0.5 * GRAVITY * timePassed * timePassed));
-        this.finalXPos = 70 + (timePassed * (Math.cos(1) * this.bottleThrowVelocity));
+        this.yPos = this.initialYPos - (Math.sin(1) * this.bottleThrowVelocity * timePassed + (0.5 * GRAVITY * timePassed * timePassed));
+        this.finalXPos = this.initialXPos + (timePassed * (Math.cos(1) * this.bottleThrowVelocity));
         this.updateImg(100);
         this.draw();
     }

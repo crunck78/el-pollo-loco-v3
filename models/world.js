@@ -65,7 +65,7 @@ export class World {
             this.xPos -= this.pepe.speed;
             //this.pepe.relatedXPos += this.pepe.speed;
         }
-        if (this.pepe.isMovingLeft && this.xPos < 0) {
+        if (this.pepe.isMovingLeft && this.xPos < 0 && !(this.pepe.xPos > 0)) {
             this.xPos += this.pepe.speed;
             //this.pepe.relatedXPos -= this.pepe.speed;
         }
@@ -75,7 +75,7 @@ export class World {
                 this.scenes[i].move(this.xPos);
             }
             for (let i = 0; i < this.enemies.length; i++) {
-                this.enemies[i].updateImg(100);
+                this.enemies[i].updateImg(200);
                 this.enemies[i].move(this.xPos);
             }
             for (let i = 0; i < this.coins.length; i++) {
@@ -90,6 +90,13 @@ export class World {
         if (this.pepe.isMovingRight && this.xPos < -(this.width - canvas.width)) {
             if (this.pepe.xPos < (canvas.width - (this.pepe.base_image.width * this.pepe.scale))) {
                 this.pepe.finalXPos += this.pepe.speed;
+                this.pepe.xPos = this.pepe.finalXPos;
+            }
+        }
+
+        if (this.pepe.isMovingLeft && this.xPos < 0) {
+            if (this.pepe.xPos > 0) {
+                this.pepe.finalXPos -= this.pepe.speed;
                 this.pepe.xPos = this.pepe.finalXPos;
             }
         }

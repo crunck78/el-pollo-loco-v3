@@ -44,6 +44,8 @@ function listenForKeys(character) {
         character.bottles--;
         character.bottleThrow.bottleThrowTime = new Date().getTime();
         console.log('bottle-throw');
+        character.bottleThrow.initialYPos = character.yPos;
+        character.bottleThrow.initialXPos = character.xPos;
       }
       //throw bottle
     }
