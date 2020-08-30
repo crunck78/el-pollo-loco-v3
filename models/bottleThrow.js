@@ -28,13 +28,18 @@ export class BottleThrow extends Item {
                 if (this.isColliding(enemies[i]) && this.yPos < 350) {
                     console.log("BOTTLE HIT");
                     if (enemies[i] instanceof Boss) {
+
                         let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
                         if (timePassedSinceCollision > 1000) {
+                            enemies[i].isColliding = true;
                             this.lastCollisionTime = new Date().getTime();
                             if (enemies[i].energy == 0) {
-                                enemies[i].status = 'dead';
+                                enemies[i].isDead = true;
+                            } else {
+                                enemies[i].energy -= 20;//damage
                             }
-                            enemies[i].energy -= 20;//damage
+                        } else {
+                            enemies[i].isColliding = false;
                         }
                     } else {
                         enemies[i].status = 'dead';
@@ -42,7 +47,6 @@ export class BottleThrow extends Item {
                 }
             }
         }
-
     }
 
     isColliding(element) {

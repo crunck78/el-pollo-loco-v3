@@ -70,21 +70,23 @@ export class World {
             //this.pepe.relatedXPos -= this.pepe.speed;
         }
 
-        if (this.xPos < 0 || this.xPos >= -(this.width - canvas.width)) {
-            for (let i = 0; i < this.scenes.length; i++) {
-                this.scenes[i].move(this.xPos);
-            }
-            for (let i = 0; i < this.enemies.length; i++) {
+        for (let i = 0; i < this.scenes.length; i++) {
+            this.scenes[i].move(this.xPos);
+        }
+        for (let i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i] instanceof Boss) {
+                this.enemies[i].updateImg();
+            } else {
                 this.enemies[i].updateImg(200);
-                this.enemies[i].move(this.xPos);
             }
-            for (let i = 0; i < this.coins.length; i++) {
-                this.coins[i].updateImg(500);
-                this.coins[i].move(this.xPos);
-            }
-            for (let i = 0; i < this.bottles.length; i++) {
-                this.bottles[i].move(this.xPos);
-            }
+            this.enemies[i].move(this.xPos);
+        }
+        for (let i = 0; i < this.coins.length; i++) {
+            this.coins[i].updateImg(500);
+            this.coins[i].move(this.xPos);
+        }
+        for (let i = 0; i < this.bottles.length; i++) {
+            this.bottles[i].move(this.xPos);
         }
 
         if (this.pepe.isMovingRight && this.xPos <= -(this.width - canvas.width)) {
@@ -102,11 +104,7 @@ export class World {
         }
 
 
-        if (this.pepe.isJumping || this.pepe.isLanding) {
-            this.pepe.updateImg(200);
-        } else {
-            this.pepe.updateImg(100);
-        }
+        this.pepe.updateImg();
 
         document.getElementById("life-bar").src = "img/HUD/life-bar/life_" + this.pepe.energy + ".png";
         document.getElementById("bottles").innerHTML = "x " + this.pepe.bottles;
@@ -121,10 +119,9 @@ export class World {
             this.scenes[i].draw();
         }
         for (let i = 0; i < this.enemies.length; i++) {
-            if (this.enemies[i].status != 'alert' && this.enemies[i].status != 'dead') {
+            if (this.enemies[i].status == 'walk') {
                 this.enemies[i].moveCreature();
             }
-
             this.enemies[i].draw();
         }
         for (let i = 0; i < this.coins.length; i++) {
@@ -139,6 +136,7 @@ export class World {
             this.pepe.bottleThrow.throwBottle();
             this.pepe.bottleThrow.checkForBottleHit(this.enemies);
         }
+        
         requestAnimationFrame(this.draw.bind(this));
     }
 }

@@ -13,7 +13,6 @@ export class Character extends Creature {
         this.coins = 0;
         this.isMovingRight = false;
         this.isMovingLeft = false;
-        this.isColliding = false;
         this.isJumping = false;
         this.isLanding = false;
         this.isIdle = true;
@@ -23,6 +22,7 @@ export class Character extends Creature {
         this.JUMP_TIME = 600;
         this.createObjectAnimations(images);
         this.start = new Date().getTime();
+        this.isColliding = false;
     }
 
     createObjectAnimations(images) {
