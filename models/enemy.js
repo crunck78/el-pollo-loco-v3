@@ -21,7 +21,8 @@ export class Boss extends Enemy {
     }
 
     checkForWalkAlert(worldXPos, worldWidth) {
-        if (worldXPos >= -(worldWidth - canvas.width)) {
+        let lastSceneXPos = -(worldWidth - canvas.width);
+        if (worldXPos < lastSceneXPos ) {
             if (this.xPos > this.xPosFinal) {
                 this.isMoving = true;
                 this.isAlerted = false;
@@ -85,14 +86,14 @@ export class Boss extends Enemy {
                 this.imgIndex = 0;
             }
         } else {
-
             if (actualStatus != 'attack') {
                 this.status = 'attack';
                 this.imgIndex = 0;
                 this.interval = 200;
             }
         }
-        //console.log('CHAR STATUS: ' + this.status);
+        //console.log('BOSS STATUS: ' + this.status);
+        //console.log('BOSS IS COLLIDING' + this.isColliding);
         requestAnimationFrame(function () {
             this.setStatus(this.status);
         }.bind(this));

@@ -1,6 +1,7 @@
 import { World } from '../models/world.js'
 import { RIGHT, LEFT, canvas } from '../models/constants.js'
-import { Boss } from '../models/enemy.js';
+import { Boss, Enemy } from '../models/enemy.js';
+import {chickenSmallImages} from '../models/animations.js'
 
 function init() {
   let chickensSmallXpos = [500, 700, 1200];
@@ -13,19 +14,20 @@ function init() {
     return enemie instanceof Boss;
   });
 
-  //level.xPos = -(level.width - canvas.width);
+  level.xPos = -(level.width - canvas.width);
   level.pepe.checkForJump();
   level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
-
-
-  boss.checkForWalkAlert(level.xPos, level.width);
-  boss.checkForAttack(level.pepe.xPos);
   boss.setStatus(boss.status);
 
+  setInterval(function () {
+    if (boss.isAttacking && !boss.isDead) {
+      level.enemies.push(new Enemy(boss.xPos, 370, 0.2, chickenSmallImages, 'walk', Math.random() * (7.875 * 0.2)));
+      console.log(boss.xPos);
+    }
+  }, 3000);
+  
   level.pepe.setStatus(level.pepe.status);
   level.updateWorld();
-
-
   level.draw();
 
   listenForKeys(level.pepe);
@@ -56,9 +58,9 @@ function listenForKeys(character) {
       if (timePassed > 1000) {
         character.bottles--;
         character.bottleThrow.bottleThrowTime = new Date().getTime();
-        console.log('bottle-throw');
-        character.bottleThrow.initialYPos = character.yPos;
-        character.bottleThrow.initialXPos = character.xPos;
+        //console.log('bottle-throw');
+        character.bottleThrow.initialYPos = character.yPos + 100;
+        character.bottleThrow.initialXPos = character.xPos + 50;
       }
       //throw bottle
     }

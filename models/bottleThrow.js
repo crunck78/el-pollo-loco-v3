@@ -22,33 +22,37 @@ export class BottleThrow extends Item {
     }
 
     checkForBottleHit(enemies) {
-
         for (let i = 0; i < enemies.length; i++) {
             if (enemies[i].status != 'dead') {
                 if (this.isColliding(enemies[i]) && this.yPos < 350) {
-                    console.log("BOTTLE HIT");
                     if (enemies[i] instanceof Boss) {
-
+                        //console.log(enemies[i].status);
+                        //console.log("BOTTLE IS COLLIDING BOSS",enemies[i].isColliding);
                         let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
                         if (timePassedSinceCollision > 1000) {
-                            enemies[i].isColliding = true;
                             this.lastCollisionTime = new Date().getTime();
                             if (enemies[i].energy == 0) {
                                 enemies[i].isDead = true;
                             } else {
+                               // console.log("BOTTLE HIT BOSS");
+                                enemies[i].isColliding = true;
                                 enemies[i].energy -= 20;//damage
+                                //break;
                             }
-                        } else {
-                            enemies[i].isColliding = false;
                         }
                     } else {
                         enemies[i].status = 'dead';
+                        console.log("BOTTLE HIT SMALL ENEMIE");
+                    }
+                } else {
+                    if (enemies[i] instanceof Boss) {
+                       enemies[i].isColliding = false;
+                       break;
                     }
                 }
             }
         }
     }
-
     isColliding(element) {
         return ((element.finalXPos - this.finalXPos + 10) < (this.base_image.width * this.scale - 10) && (this.finalXPos - element.finalXPos + 10) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.base_image.height * this.scale));
     }

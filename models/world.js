@@ -48,7 +48,7 @@ export class World {
         this.enemies.push(new Enemy(xPos, 365, 0.2, chickenBigImages, 'walk', Math.random() * (7.875 * 0.2)));
     }
     addBoss(xPos) {
-        this.enemies.push(new Boss(xPos, 200, 0.2, bossImages, 'alert', Math.random() * (7.875 * 0.2)));
+        this.enemies.push(new Boss(xPos, 200, 0.2, bossImages, 'alert', (7.875 * 0.2)));
     }
     addScene(xPos) {
         this.scenes.push(new Scene(xPos));
@@ -110,6 +110,11 @@ export class World {
         document.getElementById("bottles").innerHTML = "x " + this.pepe.bottles;
         document.getElementById("coins").innerHTML = "x " + this.pepe.coins;
 
+        let boss = this.enemies.find(enemie => {
+            return enemie instanceof Boss;
+        });
+        boss.checkForWalkAlert(this.xPos, this.width);
+        boss.checkForAttack(this.pepe.xPos);
         requestAnimationFrame(this.updateWorld.bind(this));
     }
 
@@ -136,7 +141,7 @@ export class World {
             this.pepe.bottleThrow.throwBottle();
             this.pepe.bottleThrow.checkForBottleHit(this.enemies);
         }
-        
+
         requestAnimationFrame(this.draw.bind(this));
     }
 }
