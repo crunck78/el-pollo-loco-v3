@@ -74,11 +74,9 @@ export class World {
             this.scenes[i].move(this.xPos);
         }
         for (let i = 0; i < this.enemies.length; i++) {
-            if (this.enemies[i] instanceof Boss) {
-                this.enemies[i].updateImg();
-            } else {
+
+            if (!this.enemies[i] instanceof Boss)
                 this.enemies[i].updateImg(200);
-            }
             this.enemies[i].move(this.xPos);
         }
         for (let i = 0; i < this.coins.length; i++) {
@@ -105,14 +103,16 @@ export class World {
 
 
         this.pepe.updateImg();
+        this.pepe.bottleThrow.updateImg(100);
 
         document.getElementById("life-bar").src = "img/HUD/life-bar/life_" + this.pepe.energy + ".png";
         document.getElementById("bottles").innerHTML = "x " + this.pepe.bottles;
         document.getElementById("coins").innerHTML = "x " + this.pepe.coins;
 
-        let boss = this.enemies.find(enemie => {
-            return enemie instanceof Boss;
+        let boss = this.enemies.find(enemy => {
+            return enemy instanceof Boss;
         });
+        boss.updateImg();
         boss.checkForWalkAlert(this.xPos, this.width);
         boss.checkForAttack(this.pepe.xPos);
         requestAnimationFrame(this.updateWorld.bind(this));
@@ -139,9 +139,16 @@ export class World {
         this.pepe.draw();
         if (this.pepe.bottleThrow.bottleThrowTime) {
             this.pepe.bottleThrow.throwBottle();
-            this.pepe.bottleThrow.checkForBottleHit(this.enemies);
+            //this.pepe.bottleThrow.checkForBottleHit(this.enemies);
         }
 
         requestAnimationFrame(this.draw.bind(this));
     }
+
+    calculateCollision() {
+        setInterval(() => {
+            this.pepe.bottleThrow.checkForBottleHit2(this.enemies);
+        }, 200);
+    }
+
 }

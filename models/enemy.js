@@ -37,7 +37,7 @@ export class Boss extends Enemy {
     }
 
     checkForAttack(pepeXPos) {
-        if (((this.finalXPos - pepeXPos) < canvas.width / 2) && !(this.finalXPos > this.xPosFinal)) {
+        if (((this.finalXPos - pepeXPos) < canvas.width / 1.2) && !(this.finalXPos > this.xPosFinal)) {
             this.isAlerted = false;
             this.isAttacking = true;
         } else {
@@ -52,7 +52,8 @@ export class Boss extends Enemy {
     updateImg() {
         let timePassedSinceLastCall = new Date().getTime() - this.start;
         if (timePassedSinceLastCall > this.interval) {
-            this.imgIndex++;
+            if(!(this.isDead && this.imgIndex == 2))
+                this.imgIndex++;
             //console.log('img index ' + this.imgIndex + 'status ' + this.status);
             //console.log('IMG SRC' + this.animation[this.status][this.direction][this.imgIndex].src);
             this.start = new Date().getTime();

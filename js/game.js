@@ -10,25 +10,27 @@ function init() {
   let coinsXpos = [500, 700, 1200, 900, 1200, 2000, 2300, , 3000, 5000];
   let bottlesXpos = [550, 750, 1250, 950, 1250, 2050, 2350, , 3100, 5300];
   let level = new World(4, chickensSmallXpos, chickensBigXpos, bossesXpos, coinsXpos, bottlesXpos);
-  let boss = level.enemies.find(enemie => {
-    return enemie instanceof Boss;
+  let boss = level.enemies.find(enemy => {
+    return enemy instanceof Boss;
   });
-
-  level.xPos = -(level.width - canvas.width);
-  level.pepe.checkForJump();
-  level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
-  boss.setStatus(boss.status);
 
   setInterval(function () {
     if (boss.isAttacking && !boss.isDead) {
       level.enemies.push(new Enemy(boss.xPos, 370, 0.2, chickenSmallImages, 'walk', Math.random() * (7.875 * 0.2)));
-      console.log(boss.xPos);
+      console.log(level.enemies);
     }
-  }, 3000);
-  
+  }, 2000);
+
+  level.xPos = -(level.width - canvas.width);
+  level.pepe.checkForJump();
+  level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
+  level.pepe.bottleThrow.checkForBottleHit(level.enemies);
+  boss.setStatus(boss.status);
+
   level.pepe.setStatus(level.pepe.status);
   level.updateWorld();
   level.draw();
+  //level.calculateCollision(); 
 
   listenForKeys(level.pepe);
 }

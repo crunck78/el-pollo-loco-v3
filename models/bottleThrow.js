@@ -17,8 +17,26 @@ export class BottleThrow extends Item {
         let timePassed = new Date().getTime() - this.bottleThrowTime;
         this.yPos = this.initialYPos - (Math.sin(1) * this.bottleThrowVelocity * timePassed + (0.5 * GRAVITY * timePassed * timePassed));
         this.finalXPos = this.initialXPos + (timePassed * (Math.cos(1) * this.bottleThrowVelocity));
-        this.updateImg(100);
         this.draw();
+    }
+
+    checkForBottleHit2(enemies) {
+        console.log('All enemies are', enemies);
+        enemies
+            .filter(enemy => enemy.status != 'dead')
+            .forEach(enemy => {
+                if (this.isColliding(enemy) && this.yPos < 350) {
+                    if (enemy instanceof Boss) {
+                        //Später
+                    } else {
+                        enemy.status = 'dead';
+                        console.log("BOTTLE HIT SMALL ENEMY");
+                    }
+                } else {
+                    // Später
+                }
+
+            });
     }
 
     checkForBottleHit(enemies) {
@@ -34,10 +52,9 @@ export class BottleThrow extends Item {
                             if (enemies[i].energy == 0) {
                                 enemies[i].isDead = true;
                             } else {
-                               // console.log("BOTTLE HIT BOSS");
+                                // console.log("BOTTLE HIT BOSS");
                                 enemies[i].isColliding = true;
                                 enemies[i].energy -= 20;//damage
-                                //break;
                             }
                         }
                     } else {
@@ -46,13 +63,16 @@ export class BottleThrow extends Item {
                     }
                 } else {
                     if (enemies[i] instanceof Boss) {
-                       enemies[i].isColliding = false;
-                       break;
+                        enemies[i].isColliding = false;
                     }
                 }
             }
         }
+         requestAnimationFrame(function(){
+             this.checkForBottleHit(enemies);
+         }.bind(this));
     }
+
     isColliding(element) {
         return ((element.finalXPos - this.finalXPos + 10) < (this.base_image.width * this.scale - 10) && (this.finalXPos - element.finalXPos + 10) < (element.base_image.width * element.scale - 10)) && ((element.yPos - this.yPos + 10) < (this.base_image.height * this.scale));
     }

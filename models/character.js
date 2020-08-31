@@ -2,6 +2,7 @@ import { canvas, ctx, RIGHT, LEFT, GRAVITY } from "./constants.js"
 import { Creature } from "./creature.js"
 import { BottleThrow } from "./bottleThrow.js";
 import { bottleImages } from "./animations.js";
+import { Boss } from "./enemy.js"
 export class Character extends Creature {
     constructor(xPos, yPos, scale, images, status, speed) {
         super(xPos, yPos, scale, images, status, speed);
@@ -39,16 +40,24 @@ export class Character extends Creature {
         for (let i = 0; i < enemies.length; i++) {
             if (enemies[i].status != 'dead') {
                 if (this.colliding(enemies[i])) {
-                    let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
-                    if (timePassedSinceCollision > 1000) {
-                        this.lastCollisionTime = new Date().getTime();
-                        if (this.energy == 0) {
-                            this.energy = 100;
+                    if (this.isLanding) {
+                        if (!(enemies[i] instanceof Boss)) {
+                            enemies[i].status = 'dead';
+                            break;
                         }
-                        this.energy -= enemies[i].damage;
+                    } else {
+                        let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
+                        if (timePassedSinceCollision > 1000) {
+                            this.lastCollisionTime = new Date().getTime();
+                            if (this.energy == 0) {
+                                this.energy = 100;
+                            }
+                            this.energy -= enemies[i].damage;
+                        }
+                        this.isColliding = true;
+                        break;
                     }
-                    this.isColliding = true;
-                    break;
+
                 } else {
                     this.isColliding = false;
                 }
@@ -107,7 +116,7 @@ export class Character extends Creature {
                 this.imgIndex = 0;
                 this.status = 'hit';
             }
-            
+
         }
         else if (this.isJumping || this.isLanding) {
             if (this.isJumping && actualStatus != 'jump') {
