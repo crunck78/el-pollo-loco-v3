@@ -1,13 +1,14 @@
 body {
     font-family: "Bradley Hand ITC";
     background-color: #cccccc;
+	display: flex;
+	flex-direction: column;
+	align-items:center;
 }
 
 #hud {
     position: absolute;
     top: 79px;
-    left: 8px;
-    right: 0;
     width: 688px;
     /*canvas width - hud padding*/
     height: 449px;
@@ -51,4 +52,22 @@ body {
 .counter {
     font-size: 20px;
     color: white;
+}
+
+.touchpad-container{
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  width: 720px;
+}
+
+.pad{
+  width: 60px;
+  height: 60px;
+}
+
+.pad-container{
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
 }
