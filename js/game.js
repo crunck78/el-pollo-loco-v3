@@ -20,17 +20,15 @@ function init() {
     }
   }, 2000);
 
-  //level.xPos = -(level.width - canvas.width);
-  level.pepe.checkForJump();
   level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
   level.pepe.bottleThrow.checkForBottleHit(level.enemies);
-  boss.setStatus(boss.status);
 
   level.pepe.setStatus(level.pepe.status);
   level.updateWorld();
   level.draw();
 
   listenForKeys(level.pepe);
+  listenForTouches(level.pepe);
 }
 window.addEventListener('load', init);
 
@@ -69,4 +67,57 @@ function listenForKeys(character) {
       character.isMovingLeft = false;
     }
   });
+}
+
+function listenForTouches(character){
+	document.getElementById("left-pad").addEventListener("touchstart", function(e){
+	    character.isMovingLeft = true;
+		character.direction = LEFT;
+		log("touchstart");
+		
+	});
+	
+	document.getElementById("left-pad").addEventListener("touchend", function(e){
+		character.isMovingLeft = false;
+		log("touchend");
+	});
+	
+	document.getElementById("right-pad").addEventListener("touchstart", function(e){
+	    character.isMovingRight = true;
+		character.direction = RIGHT;
+		log("touchstart");
+		
+	});
+	
+	document.getElementById("right-pad").addEventListener("touchend", function(e){
+		character.isMovingRight = false;
+		log("touchend");
+	});
+	
+	document.getElementById("jump-pad").addEventListener("touchstart", function (e){
+		let timePassedSinceJump = new Date().getTime() - character.lastJumpStarted;
+		if (timePassedSinceJump > character.JUMP_TIME * 2) {
+     		 //perform jump
+     		 character.lastJumpStarted = new Date().getTime();
+      		character.isJumping = true;
+    	}
+	});
+	
+	document.getElementById("trow-pad").addEventListener("touchstart", function (e){
+		if (character.bottles > 0) {
+      		let timePassed = new Date().getTime() - character.bottleThrow.bottleThrowTime;
+      		if (timePassed > 1000) {
+        		character.bottles--;
+        		character.bottleThrow.bottleThrowTime = new Date().getTime();
+        		//console.log('bottle-throw');
+        		character.bottleThrow.initialYPos = character.yPos + 100;
+        		character.bottleThrow.initialXPos = character.xPos + 50;
+      		}
+      		//throw bottle
+   	 	}
+	});
+}
+
+function log( msg ){
+	document.getElementById("log").innerHTML = msg;
 }
