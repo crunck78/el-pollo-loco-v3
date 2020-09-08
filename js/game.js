@@ -17,11 +17,10 @@ function init() {
   setInterval(function () {
     if (boss.isAttacking && !boss.isDead) {
       level.enemies.push(new Enemy(boss.xPos, 370, 0.2, chickenSmallImages, 'walk', Math.random() * (7.875 * 0.2)));
-      console.log(level.enemies);
     }
   }, 2000);
 
-  level.xPos = -(level.width - canvas.width);
+  //level.xPos = -(level.width - canvas.width);
   level.pepe.checkForJump();
   level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
   level.pepe.bottleThrow.checkForBottleHit(level.enemies);
@@ -30,7 +29,6 @@ function init() {
   level.pepe.setStatus(level.pepe.status);
   level.updateWorld();
   level.draw();
-  //level.calculateCollision(); 
 
   listenForKeys(level.pepe);
 }
@@ -41,42 +39,33 @@ function listenForKeys(character) {
     const k = e.key;
     let timePassedSinceJump = new Date().getTime() - character.lastJumpStarted;
     if (e.code == "Space" && timePassedSinceJump > character.JUMP_TIME * 2) {
-      //perform jump
       character.lastJumpStarted = new Date().getTime();
       character.isJumping = true;
     }
     if (k == "ArrowRight") {
       character.isMovingRight = true;
       character.direction = RIGHT;
-      //move right
     }
     if (k == "ArrowLeft") {
       character.isMovingLeft = true;
       character.direction = LEFT;
-      //moveLeft
     }
     if (k == "d" && character.bottles > 0) {
       let timePassed = new Date().getTime() - character.bottleThrow.bottleThrowTime;
       if (timePassed > 1000) {
         character.bottles--;
         character.bottleThrow.bottleThrowTime = new Date().getTime();
-        //console.log('bottle-throw');
         character.bottleThrow.initialYPos = character.yPos + 100;
         character.bottleThrow.initialXPos = character.xPos + 50;
       }
-      //throw bottle
     }
-    //console.log(k);
-
   });
   document.addEventListener("keyup", function (e) {
     const k = e.key;
     if (k == "ArrowRight") {
-      //stop moving
       character.isMovingRight = false;
     }
     if (k == "ArrowLeft") {
-      //stop moving
       character.isMovingLeft = false;
     }
   });

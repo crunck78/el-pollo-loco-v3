@@ -5,7 +5,9 @@ const ctx = canvas.getContext("2d");
 const RIGHT = 1;
 const LEFT = 0;
 
-const IMAGE_SCALE = 0.2; //adjust to fit the canvas dimentions
+const IMAGE_SCALE = 0.2; //adjust to fit the world to the canvas dimentions
 const GRAVITY = -0.0058;
 
-export { canvas, ctx, RIGHT, LEFT, IMAGE_SCALE, GRAVITY };
+const AUDIO_LAND = new Audio( "../sounds/land.mp3");
+
+export { canvas, ctx, RIGHT, LEFT, IMAGE_SCALE, GRAVITY, AUDIO_LAND};

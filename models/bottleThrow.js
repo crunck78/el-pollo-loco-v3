@@ -20,46 +20,23 @@ export class BottleThrow extends Item {
         this.draw();
     }
 
-    checkForBottleHit2(enemies) {
-        console.log('All enemies are', enemies);
-        enemies
-            .filter(enemy => enemy.status != 'dead')
-            .forEach(enemy => {
-                if (this.isColliding(enemy) && this.yPos < 350) {
-                    if (enemy instanceof Boss) {
-                        //Später
-                    } else {
-                        enemy.status = 'dead';
-                        console.log("BOTTLE HIT SMALL ENEMY");
-                    }
-                } else {
-                    // Später
-                }
-
-            });
-    }
-
     checkForBottleHit(enemies) {
         for (let i = 0; i < enemies.length; i++) {
             if (enemies[i].status != 'dead') {
                 if (this.isColliding(enemies[i]) && this.yPos < 350) {
                     if (enemies[i] instanceof Boss) {
-                        //console.log(enemies[i].status);
-                        //console.log("BOTTLE IS COLLIDING BOSS",enemies[i].isColliding);
                         let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
                         if (timePassedSinceCollision > 1000) {
                             this.lastCollisionTime = new Date().getTime();
                             if (enemies[i].energy == 0) {
                                 enemies[i].isDead = true;
                             } else {
-                                // console.log("BOTTLE HIT BOSS");
                                 enemies[i].isColliding = true;
-                                enemies[i].energy -= 20;//damage
+                                enemies[i].energy -= 20;
                             }
                         }
                     } else {
                         enemies[i].status = 'dead';
-                        console.log("BOTTLE HIT SMALL ENEMIE");
                     }
                 } else {
                     if (enemies[i] instanceof Boss) {

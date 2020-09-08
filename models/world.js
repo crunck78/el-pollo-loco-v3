@@ -139,9 +139,7 @@ export class World {
         this.pepe.draw();
         if (this.pepe.bottleThrow.bottleThrowTime) {
             this.pepe.bottleThrow.throwBottle();
-            //this.pepe.bottleThrow.checkForBottleHit(this.enemies);
         }
-
         requestAnimationFrame(this.draw.bind(this));
     }
 
