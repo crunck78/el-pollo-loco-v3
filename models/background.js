@@ -1,4 +1,4 @@
-import { canvas, ctx} from "./constants.js"
+import { canvas, ctx } from "./constants.js"
 import { Model } from "./model.js"
 
 
@@ -13,9 +13,9 @@ export class Background extends Model {
         this.finalXPos = movement * this.distance + this.xPos;
     }
     draw() {
-                ctx.drawImage(this.base_image, this.finalXPos, this.yPos, canvas.width, canvas.height);
-                //requestAnimationFrame(this.draw.bind(this));
-        
+        ctx.drawImage(this.base_image, this.finalXPos, this.yPos, canvas.width, canvas.height);
+        //requestAnimationFrame(this.draw.bind(this));
+
     }
     insideCanvas() {
         return this.finalXPos > (-canvas.width) && this.finalXPos < canvas.width;

@@ -2,65 +2,83 @@
 <html>
 
 <head>
-    <meta charset='utf-8'>
-    <title>EL POLLO LOCO</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='./main.css'>
+  <meta charset='utf-8'>
+  <title>EL POLLO LOCO</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel='stylesheet' type='text/css' media='screen' href='./main.css'>
 
-    <script type="module" src='./js/game.js'></script>
+  <script type="module" src='./js/game.js'></script>
 </head>
 
 <body>
-    
-	
-    <div id="start-screen">
-	  <h1>EL POLLO LOCO</h1>
-	  <div id="info-container">
-		<div id="keyboard-info">
-		  <p>Keyboard</p>
-		  <p>D - Throw Bottle</p>
-		  <p>Space - Jump</p>
-		  <p>"%|arr;"</p>
-		  <p></p>
-		</div>
-		<div id="separator"></div>
-		<div id="touch-info">
-		  <p>Touch Pad</p>
-		</div>
-	  </div>
-	  
-	  <button type="button" id="start-btn">Start</button>
-	</div>
 
-    <div id="hud">
-        <div class="hud-element">
-            <img id="life-bar" src="img/HUD/life-bar/life_100.png">
-        </div>
 
-        <div id="item-list" class="hud-element">
-            <div class="item">
-                <img src="img/HUD/bottle.png">
-                <p id="bottles" class="counter"></p>
-            </div>
-            <div class="item">
-                <img src="img/HUD/coin.png">
-                <p id="coins" class="counter"></p>
-            </div>
-        </div>
+  <img id="intro-img" src="./img/ingameImg.png" alt="" width="720" height="480">
+  <div id="start-screen">
+    <h1>EL POLLO LOCO</h1>
+    <div id="info-container">
+      <div id="keyboard-info" class="controle-info">
+        <p style="font-size: larger; font-weight: 700;">Keyboard</p>
+        <p>D - Throw Bottle</p>
+        <p>Space - Jump</p>
+        <p>&lt; - Move Leftside</p>
+        <p>&gt; - Move Rightside</p>
+      </div>
+      <div id="separator"></div>
+      <div id="touch-info" class="controle-info">
+        <p style="font-size: larger; font-weight: 700;">Touch Pad</p>
+        <p>T - Throw Bottle</p>
+        <p>J - Jump</p>
+        <p>L - Move Leftside</p>
+        <p>R - Move Rightside</p>
+      </div>
     </div>
 
-    <canvas id="canvas" width="720" height="480"></canvas>
-  <div class="touchpad-container">
-	<div class="pad-container">
-	  <button type="button" id="left-pad" class="pad"></button>
-	  <button type="button" id="right-pad" class="pad"></button>
-	</div>
-	
-	<div class="pad-container">
-	  <button type="button" id="trow-pad" class="pad"></button>
-	  <button type="button" id="jump-pad" class="pad"></button>
-	</div>
+    <button type="button" id="start-btn">Start</button>
   </div>
+
+  <div id="hud" class="d-none">
+    <div class="hud-element">
+      <img id="life-bar" src="img/HUD/life-bar/life_100.png">
+    </div>
+
+    <div id="item-list" class="hud-element">
+      <div class="item">
+        <img src="img/HUD/bottle.png">
+        <p id="bottles" class="counter"></p>
+      </div>
+      <div class="item">
+        <img src="img/HUD/coin.png">
+        <p id="coins" class="counter"></p>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="canvas" width="720" height="480" class="d-none"></canvas>
+  <div id="touchpad" class="touchpad-container" class="d-none">
+    <div class="pad-container">
+      L-
+      <button type="button" id="left-pad" class="pad"></button>
+      <button type="button" id="right-pad" class="pad"></button>
+      -R
+    </div>
+
+    <div class="pad-container">
+      T-
+      <button type="button" id="trow-pad" class="pad"></button>
+      <button type="button" id="jump-pad" class="pad"></button>
+      -J
+    </div>
+  </div>
+
+  <div id="won-screen">
+
+  </div>
+
+  <div id="dead-screen">
+    
+  </div>
+
 </body>
 
 </html>
