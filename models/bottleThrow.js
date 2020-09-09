@@ -1,5 +1,5 @@
 import { Item } from './item.js'
-import { GRAVITY } from './constants.js'
+import { GRAVITY, AUDIO_GLASS_BREAK, AUDIO_CHICKEN } from './constants.js'
 import { Boss } from './enemy.js'
 
 export class BottleThrow extends Item {
@@ -24,7 +24,10 @@ export class BottleThrow extends Item {
         for (let i = 0; i < enemies.length; i++) {
             if (enemies[i].status != 'dead') {
                 if (this.isColliding(enemies[i]) && this.yPos < 350) {
+					AUDIO_CHICKEN.play();
+					AUDIO_GLASS_BREAK.play();
                     if (enemies[i] instanceof Boss) {
+						
                         let timePassedSinceCollision = new Date().getTime() - this.lastCollisionTime;
                         if (timePassedSinceCollision > 1000) {
                             this.lastCollisionTime = new Date().getTime();
@@ -33,10 +36,12 @@ export class BottleThrow extends Item {
                             } else {
                                 enemies[i].isColliding = true;
                                 enemies[i].energy -= 20;
+								//AUDIO_GLASS_BREAK.play();
                             }
                         }
                     } else {
                         enemies[i].status = 'dead';
+						//AUDIO_GLASS_BREAK.play();
                     }
                 } else {
                     if (enemies[i] instanceof Boss) {

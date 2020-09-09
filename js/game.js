@@ -1,5 +1,5 @@
 import { World } from '../models/world.js'
-import { RIGHT, LEFT, canvas } from '../models/constants.js'
+import { RIGHT, LEFT, canvas, AUDIO_JUMP, AUDIO_THROW, AUDIO_BACKGROUND} from '../models/constants.js'
 import { Boss, Enemy } from '../models/enemy.js';
 import {chickenSmallImages} from '../models/animations.js'
 
@@ -15,21 +15,30 @@ function init() {
   });
 
   setInterval(function () {
-    if (boss.isAttacking && !boss.isDead) {
+    if (boss.isAttacking && !boss.isDead &&!level.pepe.isDead) {
       level.enemies.push(new Enemy(boss.xPos, 370, 0.2, chickenSmallImages, 'walk', Math.random() * (7.875 * 0.2)));
     }
   }, 2000);
 
+  playMusic();
+  level.pepe.checkForJump();
   level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
   level.pepe.bottleThrow.checkForBottleHit(level.enemies);
 
   level.pepe.setStatus(level.pepe.status);
+  boss.setStatus(boss.status);
   level.updateWorld();
   level.draw();
 
   listenForKeys(level.pepe);
   listenForTouches(level.pepe);
 }
+
+function playMusic(){
+	  AUDIO_BACKGROUND.play();
+	  requestAnimationFrame( playMusic );
+  }
+
 window.addEventListener('load', init);
 
 function listenForKeys(character) {
@@ -39,14 +48,17 @@ function listenForKeys(character) {
     if (e.code == "Space" && timePassedSinceJump > character.JUMP_TIME * 2) {
       character.lastJumpStarted = new Date().getTime();
       character.isJumping = true;
+	  AUDIO_JUMP.play();
     }
     if (k == "ArrowRight") {
       character.isMovingRight = true;
       character.direction = RIGHT;
+	  
     }
     if (k == "ArrowLeft") {
       character.isMovingLeft = true;
       character.direction = LEFT;
+	  
     }
     if (k == "d" && character.bottles > 0) {
       let timePassed = new Date().getTime() - character.bottleThrow.bottleThrowTime;
@@ -73,6 +85,7 @@ function listenForTouches(character){
 	document.getElementById("left-pad").addEventListener("touchstart", function(e){
 	    character.isMovingLeft = true;
 		character.direction = LEFT;
+
 		log("touchstart");
 		
 	});
@@ -85,6 +98,7 @@ function listenForTouches(character){
 	document.getElementById("right-pad").addEventListener("touchstart", function(e){
 	    character.isMovingRight = true;
 		character.direction = RIGHT;
+		
 		log("touchstart");
 		
 	});
@@ -100,6 +114,7 @@ function listenForTouches(character){
      		 //perform jump
      		 character.lastJumpStarted = new Date().getTime();
       		character.isJumping = true;
+			AUDIO_JUMP.play();
     	}
 	});
 	
@@ -112,6 +127,7 @@ function listenForTouches(character){
         		//console.log('bottle-throw');
         		character.bottleThrow.initialYPos = character.yPos + 100;
         		character.bottleThrow.initialXPos = character.xPos + 50;
+				AUDIO_THROW.play();
       		}
       		//throw bottle
    	 	}

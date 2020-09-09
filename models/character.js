@@ -1,4 +1,4 @@
-import { canvas, ctx, RIGHT, LEFT, GRAVITY, AUDIO_LAND } from "./constants.js"
+import { canvas, ctx, RIGHT, LEFT, GRAVITY, AUDIO_LAND, AUDIO_HIT, AUDIO_WALK, AUDIO_BOTTLE, AUDIO_CHICKEN } from "./constants.js"
 import { Creature } from "./creature.js"
 import { BottleThrow } from "./bottleThrow.js";
 import { bottleImages } from "./animations.js";
@@ -37,12 +37,14 @@ export class Character extends Creature {
     }
     checkForCollision(enemies, bottles, coins) {
         //check collision with enemies
-        for (let i = 0; i < enemies.length; i++) {
+		if(!this.isDead){
+			 for (let i = 0; i < enemies.length; i++) {
             if (enemies[i].status != 'dead') {
                 if (this.colliding(enemies[i])) {
                     if (this.isLanding) {
                         if (!(enemies[i] instanceof Boss)) {
                             enemies[i].status = 'dead';
+							AUDIO_CHICKEN.play();
                             break;
                         }
                     } else {
@@ -55,6 +57,7 @@ export class Character extends Creature {
                             this.energy -= enemies[i].damage;
                         }
                         this.isColliding = true;
+						AUDIO_HIT.play();
                         break;
                     }
 
@@ -67,7 +70,7 @@ export class Character extends Creature {
         for (let i = 0; i < bottles.length; i++) {
             if (this.colliding(bottles[i])) {
                 this.bottles++;
-
+				AUDIO_BOTTLE.play();
                 bottles.splice(i, 1);
             }
         }
@@ -79,6 +82,8 @@ export class Character extends Creature {
                 coins.splice(i, 1);
             }
         }
+		}
+       
         requestAnimationFrame(function () {
             this.checkForCollision(enemies, bottles, coins);
 
@@ -86,7 +91,8 @@ export class Character extends Creature {
     }
 
     checkForJump() {
-        let timePassedSinceJump = new Date().getTime() - this.lastJumpStarted;
+		if(!this.isDead){
+			  let timePassedSinceJump = new Date().getTime() - this.lastJumpStarted;
         if (timePassedSinceJump < this.JUMP_TIME) {
             //console.log('TIME PASSED SINCE JUMP ' + timePassedSinceJump + ' JUMP TIME' + this.JUMP_TIME + ' CHARACTER POS Y ' + this.yPos + ' GROUND POS ' + this.GROUND_POS + ' CHAR IMG' + this.base_image.src);
             this.isLanding = false;
@@ -99,12 +105,17 @@ export class Character extends Creature {
             if (this.yPos < this.GROUND_POS) {
                 this.yPos += 10;
                 this.isLanding = true;
+				 if (this.yPos <= this.GROUND_POS){
+					 AUDIO_LAND.play();
+				 }
             }
             else {
-                AUDIO_LAND.play();
+                
                 this.isLanding = false;
             }
         }
+		}
+      
         requestAnimationFrame(this.checkForJump.bind(this));
     }
     setStatus(actualStatus) {
@@ -114,7 +125,8 @@ export class Character extends Creature {
                 this.imgIndex = 0;
                 this.status = 'dead';
             }
-        } else if (this.isColliding) {
+        } 
+		else if (this.isColliding) {
             if (actualStatus != 'hit') {
                 this.interval = 300;
                 this.imgIndex = 0;
@@ -139,6 +151,7 @@ export class Character extends Creature {
                 this.interval = this.speed * 50;
                 this.imgIndex = 0;
             }
+			AUDIO_WALK.play();
         }
         else {
             this.interval = 200;
@@ -163,7 +176,8 @@ export class Character extends Creature {
     updateImg() {
         let timePassedSinceLastCall = new Date().getTime() - this.start;
         if (timePassedSinceLastCall > this.interval) {
-            this.imgIndex++;
+			if(!(this.isDead && this.imgIndex == 5))
+            	this.imgIndex++;
             this.start = new Date().getTime();
         }
         // requestAnimationFrame(this.updateImg.bind(this));

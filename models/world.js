@@ -61,11 +61,11 @@ export class World {
     }
 
     updateWorld() {
-        if (this.pepe.isMovingRight && this.xPos >= -(this.width - canvas.width)) {
+        if (this.pepe.isMovingRight && !this.pepe.isDead && this.xPos >= -(this.width - canvas.width)) {
             this.xPos -= this.pepe.speed;
             //this.pepe.relatedXPos += this.pepe.speed;
         }
-        if (this.pepe.isMovingLeft && this.xPos < 0 && !(this.pepe.xPos > 0)) {
+        if (this.pepe.isMovingLeft && !this.pepe.isDead && this.xPos < 0 && !(this.pepe.xPos > 0)) {
             this.xPos += this.pepe.speed;
             //this.pepe.relatedXPos -= this.pepe.speed;
         }
@@ -104,8 +104,8 @@ export class World {
 
         this.pepe.updateImg();
         this.pepe.bottleThrow.updateImg(100);
-
-        document.getElementById("life-bar").src = "img/HUD/life-bar/life_" + this.pepe.energy + ".png";
+		if(!this.pepe.isDead)
+        	document.getElementById("life-bar").src = "img/HUD/life-bar/life_" + this.pepe.energy + ".png";
         document.getElementById("bottles").innerHTML = "x " + this.pepe.bottles;
         document.getElementById("coins").innerHTML = "x " + this.pepe.coins;
 
@@ -137,16 +137,9 @@ export class World {
             this.bottles[i].draw();
         }
         this.pepe.draw();
-        if (this.pepe.bottleThrow.bottleThrowTime) {
+        if (this.pepe.bottleThrow.bottleThrowTime && !this.pepe.isDead) {
             this.pepe.bottleThrow.throwBottle();
         }
         requestAnimationFrame(this.draw.bind(this));
     }
-
-    calculateCollision() {
-        setInterval(() => {
-            this.pepe.bottleThrow.checkForBottleHit2(this.enemies);
-        }, 200);
-    }
-
 }
