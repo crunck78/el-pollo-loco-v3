@@ -14,7 +14,7 @@ function init() {
 
 function playMusic() {
   AUDIO_BACKGROUND.play();
-  requestAnimationFrame(playMusic);
+  //requestAnimationFrame(playMusic);
 }
 
 function start(level){
@@ -28,7 +28,6 @@ function start(level){
     }
   }, 2000);
 
-  playMusic();
   level.pepe.checkForJump();
   level.pepe.checkForCollision(level.enemies, level.bottles, level.coins);
   level.pepe.bottleThrow.checkForBottleHit(level.enemies);
@@ -37,43 +36,32 @@ function start(level){
   boss.setStatus(boss.status);
   level.updateWorld();
   level.draw();
-
+ 	level.checkGameStatus();
+  
   listenForKeys(level.pepe);
   listenForTouches(level.pepe);
 }
-
-window.addEventListener('load', function(){
-  let level = init();
-  document.getElementById('start-btn').onclick = function(){
-    document.getElementById("start-screen").classList.add("d-none");
-    document.getElementById("intro-img").classList.add("d-none");
-    document.getElementById("canvas").classList.remove("d-none");
-    document.getElementById("hud").classList.remove("d-none");
-    document.getElementById("touchpad").classList.remove("d-none");
-    start(level);
-  }
-});
 
 function listenForKeys(character) {
   document.addEventListener("keydown", function (e) {
     const k = e.key;
     let timePassedSinceJump = new Date().getTime() - character.lastJumpStarted;
-    if (e.code == "Space" && timePassedSinceJump > character.JUMP_TIME * 2) {
+    if (e.code == "Space" && timePassedSinceJump > character.JUMP_TIME * 2 && !character.isDead) {
       character.lastJumpStarted = new Date().getTime();
       character.isJumping = true;
       AUDIO_JUMP.play();
     }
-    if (k == "ArrowRight") {
+    if (k == "ArrowRight" && !character.isDead) {
       character.isMovingRight = true;
       character.direction = RIGHT;
 
     }
-    if (k == "ArrowLeft") {
+    if (k == "ArrowLeft" && !character.isDead) {
       character.isMovingLeft = true;
       character.direction = LEFT;
 
     }
-    if (k == "d" && character.bottles > 0) {
+    if (k == "d" && character.bottles > 0 && !character.isDead) {
       let timePassed = new Date().getTime() - character.bottleThrow.bottleThrowTime;
       if (timePassed > 1000) {
         character.bottles--;
@@ -97,8 +85,11 @@ function listenForKeys(character) {
 
 function listenForTouches(character) {
   document.getElementById("left-pad").addEventListener("touchstart", function (e) {
-    character.isMovingLeft = true;
-    character.direction = LEFT;
+	  if(!character.isDead) {
+		  character.isMovingLeft = true;
+    		character.direction = LEFT;
+	  }
+    
 
     log("touchstart");
 
@@ -110,8 +101,11 @@ function listenForTouches(character) {
   });
 
   document.getElementById("right-pad").addEventListener("touchstart", function (e) {
-    character.isMovingRight = true;
-    character.direction = RIGHT;
+	  if(!character.isDead){
+		  character.isMovingRight = true;
+   		 character.direction = RIGHT;
+	  }
+    
 
     log("touchstart");
 
@@ -123,17 +117,20 @@ function listenForTouches(character) {
   });
 
   document.getElementById("jump-pad").addEventListener("touchstart", function (e) {
-    let timePassedSinceJump = new Date().getTime() - character.lastJumpStarted;
-    if (timePassedSinceJump > character.JUMP_TIME * 2) {
+	  if(!character.isDead){
+		  let timePassedSinceJump = new Date().getTime() - character.lastJumpStarted;
+    		if (timePassedSinceJump > character.JUMP_TIME * 2) {
       //perform jump
       character.lastJumpStarted = new Date().getTime();
       character.isJumping = true;
       AUDIO_JUMP.play();
     }
+	  }
+    
   });
 
   document.getElementById("trow-pad").addEventListener("touchstart", function (e) {
-    if (character.bottles > 0) {
+    if (character.bottles > 0 && !character.isDead) {
       let timePassed = new Date().getTime() - character.bottleThrow.bottleThrowTime;
       if (timePassed > 1000) {
         character.bottles--;
@@ -151,3 +148,16 @@ function listenForTouches(character) {
 function log(msg) {
   document.getElementById("log").innerHTML = msg;
 }
+
+window.addEventListener('load', function(){
+  let level = init();
+  document.getElementById('start-btn').onclick = function(){
+    document.getElementById("start-screen").classList.add("d-none");
+    document.getElementById("intro-img").classList.add("d-none");
+    document.getElementById("canvas").classList.remove("d-none");
+    document.getElementById("hud").classList.remove("d-none");
+    document.getElementById("touchpad").classList.remove("d-none");
+	AUDIO_BACKGROUND.play();
+   	start(level);
+  }
+});

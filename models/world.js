@@ -1,4 +1,4 @@
-import { canvas } from "./constants.js"
+import { canvas, AUDIO_BACKGROUND } from "./constants.js"
 import { pepeImages, chickenSmallImages, chickenBigImages, bossImages, bottleImages, coinImages } from "./animations.js"
 import { Scene } from "./scene.js"
 import { Background } from "./background.js"
@@ -40,7 +40,15 @@ export class World {
         for (let i = 0; i < size; i++) {
             this.addScene(i * 2 * canvas.width); // 1 x scene.width equals 2 x canvas.width
         }
+		//this.boss = getBoss();
     }
+	
+	getBoss(){
+		let boss = this.enemies.find(enemy => {
+            return enemy instanceof Boss;
+        });
+	}
+	
     addChickenSmall(xPos) {
         this.enemies.push(new Enemy(xPos, 370, 0.2, chickenSmallImages, 'walk', Math.random() * (7.875 * 0.2)));
     }
@@ -75,7 +83,7 @@ export class World {
         }
         for (let i = 0; i < this.enemies.length; i++) {
 
-            if (!this.enemies[i] instanceof Boss)
+            if (!(this.enemies[i] instanceof Boss))
                 this.enemies[i].updateImg(200);
             this.enemies[i].move(this.xPos);
         }
@@ -142,4 +150,22 @@ export class World {
         }
         requestAnimationFrame(this.draw.bind(this));
     }
+	
+	checkGameStatus(){
+		let boss = this.enemies.find(enemy => {
+            return enemy instanceof Boss;
+        });
+		if(this.pepe.isDead || boss.isDead){
+			if( this.pepe.isDead ){
+				  document.getElementById("game-over-msg").innerHTML = "YOU DIED";
+			}
+			if( boss.isDead ){
+				  document.getElementById("game-over-msg").innerHTML = "YOU WON";
+			}
+			AUDIO_BACKGROUND.pause();
+			document.getElementById("game-over-screen").classList.remove("d-none");
+		}else{
+			requestAnimationFrame( this.checkGameStatus.bind(this) );
+		}
+	}
 }

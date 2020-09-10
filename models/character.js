@@ -78,16 +78,16 @@ export class Character extends Creature {
             for (let i = 0; i < coins.length; i++) {
                 if (this.colliding(coins[i])) {
                     this.coins++;
-
                     coins.splice(i, 1);
                 }
             }
-        }
-
-        requestAnimationFrame(function () {
+			requestAnimationFrame(function () {
             this.checkForCollision(enemies, bottles, coins);
 
         }.bind(this));
+        }
+
+        
     }
 
     checkForJump() {
@@ -114,9 +114,10 @@ export class Character extends Creature {
                     this.isLanding = false;
                 }
             }
+			requestAnimationFrame(this.checkForJump.bind(this));
         }
 
-        requestAnimationFrame(this.checkForJump.bind(this));
+        
     }
     setStatus(actualStatus) {
         if (this.isDead) {
@@ -160,9 +161,12 @@ export class Character extends Creature {
                 this.imgIndex = 0;
             }
         }
-        requestAnimationFrame(function () {
+		if(!this.isDead){
+			requestAnimationFrame(function () {
             this.setStatus(this.status);
         }.bind(this));
+		}
+        
     }
 
     draw() {
