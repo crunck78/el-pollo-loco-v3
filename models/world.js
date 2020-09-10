@@ -167,5 +167,5 @@ export class World {
 		}else{
 			requestAnimationFrame( this.checkGameStatus.bind(this) );
 		}
-	}
+    }
 }

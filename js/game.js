@@ -4,8 +4,8 @@ import { Boss, Enemy } from '../models/enemy.js';
 import { chickenSmallImages } from '../models/animations.js'
 
 function init() {
-  let chickensSmallXpos = [500, 700, 1200];
-  let chickensBigXpos = [900, 1200, 2000];
+  let chickensSmallXpos = [500, 700, , 900, 1200, 1500, 1600, 2500, 2700, 3000, 3500];
+  let chickensBigXpos = [900, 1200, 2000, 2200, 2500, 2600, 3000, 3700, 4000, 4500];
   let bossesXpos = [canvas.width * 4 * 2];
   let coinsXpos = [500, 700, 1200, 900, 1200, 2000, 2300, , 3000, 5000];
   let bottlesXpos = [550, 750, 1250, 950, 1250, 2050, 2350, , 3100, 5300];
@@ -24,7 +24,7 @@ function start(level){
 
   setInterval(function () {
     if (boss.isAttacking && !boss.isDead && !level.pepe.isDead) {
-      level.enemies.push(new Enemy(boss.xPos, 370, 0.2, chickenSmallImages, 'walk', Math.random() * (7.875 * 0.2)));
+      level.enemies.push(new Enemy(boss.xPos, 370, 0.2, chickenSmallImages, 'walk', (7.875 * 0.2)));
     }
   }, 2000);
 
